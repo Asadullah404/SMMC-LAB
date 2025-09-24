@@ -723,7 +723,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
         <div ref={printRef} className="space-y-6 print:p-8">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-2xl font-bold tracking-wide">PREMIUM LABORATORY REPORT</h1>
+            <h1 className="text-2xl font-bold tracking-wide">SMMC LABORATORY REPORT</h1>
             <p className="text-sm text-muted-foreground">Report ID: {report.reportId}</p>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">
               <CheckCircle className="h-3 w-3" />
