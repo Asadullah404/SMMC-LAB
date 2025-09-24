@@ -1,0 +1,242 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { PatientInfo } from "@/types/lab-report";
+import { User, Calendar, Hash } from "lucide-react";
+
+// ✅ zod schema matches your LabReport type
+const patientSchema = z.object({
+  name: z.string().min(1, "Patient name is required").max(100),
+  relation: z.string().min(1, "Relation info is required").max(50),
+  age: z
+    .number({ invalid_type_error: "Age must be a number" })
+    .min(1, "Age must be at least 1")
+    .max(120, "Age must be less than 120"),
+  sex: z.enum(["Male", "Female", "Other"], {
+    required_error: "Please select sex",
+  }),
+  referringDoctor: z
+    .string()
+    .min(1, "Referring doctor is required")
+    .max(100),
+  sampleId: z.string().min(1, "Sample ID is required"),
+  collectionDateTime: z.string().min(1, "Collection date/time is required"),
+});
+
+interface PatientFormProps {
+  initialData?: PatientInfo;
+  onSubmit: (data: PatientInfo) => void;
+}
+
+export function PatientForm({ initialData, onSubmit }: PatientFormProps) {
+  const form = useForm<PatientInfo>({
+    resolver: zodResolver(patientSchema),
+    defaultValues: initialData || {
+      name: "",
+      relation: "",
+      age: 0,
+      sex: "Male",
+      referringDoctor: "",
+      sampleId: `S-${Date.now().toString().slice(-6)}`,
+      collectionDateTime: "",
+    },
+  });
+
+  const handleSubmit = (data: PatientInfo) => {
+    onSubmit(data);
+  };
+
+  return (
+    <Card className="card-shadow">
+      <CardHeader className="medical-gradient text-white">
+        <CardTitle className="flex items-center gap-2">
+          <User className="h-5 w-5" />
+          Patient Information
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="p-6 space-y-4">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
+            {/* Name + Relation */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Patient Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter patient name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="relation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Relation Info</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., W/O Yasir" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Age + Sex + Doctor */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name="age"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Age</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter age"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) =>
+                          field.onChange(
+                            e.target.value ? Number(e.target.value) : 0
+                          )
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="sex"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sex</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select sex" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Male">Male</SelectItem>
+                        <SelectItem value="Female">Female</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="referringDoctor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Referring Doctor</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Dr. Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Sample ID + Collection Date */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="sampleId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Hash className="h-4 w-4" />
+                      Sample ID
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Auto-generated" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="collectionDateTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      Collection Date/Time
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="datetime-local" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Submit */}
+            <div className="flex justify-end pt-4">
+              <Button type="submit" className="flex items-center gap-2">
+                Next: Select Tests
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}
