@@ -33,8 +33,8 @@ const patientSchema = z.object({
   relation: z.string().min(1, "Relation info is required").max(50),
   age: z
     .number({ invalid_type_error: "Age must be a number" })
-    .min(1, "Age must be at least 1")
-    .max(120, "Age must be less than 120"),
+    .min(0.1, "Age must be at least 0.1") // allow floats < 1
+    .max(120, "Age must be less than 120"), // max age
   sex: z.enum(["Male", "Female", "Other"], {
     required_error: "Please select sex",
   }),

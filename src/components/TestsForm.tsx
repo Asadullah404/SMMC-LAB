@@ -31,6 +31,15 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
     });
   };
 
+  const updateUrineTest = (
+    updates: Partial<LabReport["tests"]["urine"]>
+  ) => {
+    onChange({
+      ...data,
+      urine: { ...data.urine, ...updates },
+    });
+  };
+
   return (
     <Card className="card-shadow">
       <CardHeader className="medical-gradient text-white">
@@ -40,6 +49,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
+
         {/* Malaria Test */}
         <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
           <div className="flex items-center space-x-2">
@@ -56,10 +66,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
                 })
               }
             />
-            <Label
-              htmlFor="malaria"
-              className="text-base font-medium flex items-center gap-2"
-            >
+            <Label htmlFor="malaria" className="text-base font-medium flex items-center gap-2">
               <Bug className="h-4 w-4" />
               Malarial Parasites
             </Label>
@@ -88,9 +95,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
 
                 {data.malarialParasites.result === "Positive" && (
                   <div>
-                    <Label className="text-sm font-medium">
-                      Parasite Density (parasites/µL)
-                    </Label>
+                    <Label className="text-sm font-medium">Parasite Density (parasites/µL)</Label>
                     <Input
                       type="number"
                       placeholder="e.g., 1200"
@@ -98,8 +103,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
                       value={data.malarialParasites.parasiteDensity || ""}
                       onChange={(e) =>
                         updateMalariaTest({
-                          parasiteDensity:
-                            parseInt(e.target.value) || undefined,
+                          parasiteDensity: parseInt(e.target.value) || undefined,
                         })
                       }
                     />
@@ -107,16 +111,11 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
                 )}
               </div>
 
-              {/* Always show both species with individual dropdowns */}
               <div>
-                <Label className="text-sm font-medium mb-3 block">
-                  Species Results (Always Required)
-                </Label>
+                <Label className="text-sm font-medium mb-3 block">Species Results (Always Required)</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      P. falciparum
-                    </Label>
+                    <Label className="text-sm font-medium mb-2 block">P. falciparum</Label>
                     <Select
                       value={data.malarialParasites.pFalciparumResult || ""}
                       onValueChange={(value: "Positive" | "Negative") =>
@@ -134,9 +133,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
                   </div>
 
                   <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      P. vivax
-                    </Label>
+                    <Label className="text-sm font-medium mb-2 block">P. vivax</Label>
                     <Select
                       value={data.malarialParasites.pVivaxResult || ""}
                       onValueChange={(value: "Positive" | "Negative") =>
@@ -154,29 +151,14 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
                   </div>
                 </div>
 
-                {/* Badges */}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {data.malarialParasites.pFalciparumResult && (
-                    <Badge
-                      variant={
-                        data.malarialParasites.pFalciparumResult === "Positive"
-                          ? "destructive"
-                          : "secondary"
-                      }
-                      className="text-xs"
-                    >
+                    <Badge variant={data.malarialParasites.pFalciparumResult === "Positive" ? "destructive" : "secondary"} className="text-xs">
                       P. falciparum: {data.malarialParasites.pFalciparumResult}
                     </Badge>
                   )}
                   {data.malarialParasites.pVivaxResult && (
-                    <Badge
-                      variant={
-                        data.malarialParasites.pVivaxResult === "Positive"
-                          ? "destructive"
-                          : "secondary"
-                      }
-                      className="text-xs"
-                    >
+                    <Badge variant={data.malarialParasites.pVivaxResult === "Positive" ? "destructive" : "secondary"} className="text-xs">
                       P. vivax: {data.malarialParasites.pVivaxResult}
                     </Badge>
                   )}
@@ -193,16 +175,10 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
               id="dengue"
               checked={data.dengueNS1.selected}
               onCheckedChange={(checked) =>
-                updateDengueTest({
-                  selected: !!checked,
-                  result: undefined,
-                })
+                updateDengueTest({ selected: !!checked, result: undefined })
               }
             />
-            <Label
-              htmlFor="dengue"
-              className="text-base font-medium flex items-center gap-2"
-            >
+            <Label htmlFor="dengue" className="text-base font-medium flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
               Dengue NS1 Antigen
             </Label>
@@ -228,13 +204,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
 
               {data.dengueNS1.result && (
                 <div className="mt-3">
-                  <Badge
-                    variant={
-                      data.dengueNS1.result === "Positive"
-                        ? "destructive"
-                        : "secondary"
-                    }
-                  >
+                  <Badge variant={data.dengueNS1.result === "Positive" ? "destructive" : "secondary"}>
                     Dengue NS1: {data.dengueNS1.result}
                   </Badge>
                 </div>
@@ -242,6 +212,39 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
             </div>
           )}
         </div>
+
+        {/* Urine Test */}
+        <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="urine"
+              checked={data.urine.selected}
+              onCheckedChange={(checked) =>
+                updateUrineTest({ selected: !!checked })
+              }
+            />
+            <Label htmlFor="urine" className="text-base font-medium flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4" />
+              Urine Analysis
+            </Label>
+          </div>
+
+          {data.urine.selected && (
+            <div className="ml-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input placeholder="Volume (ml)" value={data.urine.volume || ""} onChange={(e) => updateUrineTest({ volume: e.target.value })} />
+              <Input placeholder="Color" value={data.urine.color || ""} onChange={(e) => updateUrineTest({ color: e.target.value })} />
+              <Input placeholder="Appearance" value={data.urine.appearance || ""} onChange={(e) => updateUrineTest({ appearance: e.target.value })} />
+              <Input placeholder="Specific Gravity" value={data.urine.specificGravity || ""} onChange={(e) => updateUrineTest({ specificGravity: e.target.value })} />
+              <Input placeholder="pH" value={data.urine.pH || ""} onChange={(e) => updateUrineTest({ pH: e.target.value })} />
+              <Input placeholder="Protein" value={data.urine.protein || ""} onChange={(e) => updateUrineTest({ protein: e.target.value })} />
+              <Input placeholder="RBCs" value={data.urine.rbcs || ""} onChange={(e) => updateUrineTest({ rbcs: e.target.value })} />
+              <Input placeholder="WBCs" value={data.urine.wbcs || ""} onChange={(e) => updateUrineTest({ wbcs: e.target.value })} />
+              <Input placeholder="Ketones" value={data.urine.ketones || ""} onChange={(e) => updateUrineTest({ ketones: e.target.value })} />
+              <Input placeholder="Urobilinogen" value={data.urine.urobilinogen || ""} onChange={(e) => updateUrineTest({ urobilinogen: e.target.value })} />
+            </div>
+          )}
+        </div>
+
       </CardContent>
     </Card>
   );

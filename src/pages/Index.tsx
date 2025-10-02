@@ -388,6 +388,34 @@ const Index = () => {
   const [searchCode, setSearchCode] = useState("");
   const [showMobileSearch, setShowMobileSearch] = useState(false); // ✅ mobile search toggle
 
+  // const [report, setReport] = useState<LabReport>({
+  //   reportId: `REP-${format(new Date(), "yyyyMMdd")}-${String(
+  //     Math.floor(Math.random() * 9999) + 1
+  //   ).padStart(4, "0")}`,
+  //   patient: {
+  //     name: "",
+  //     relation: "",
+  //     age: undefined,
+  //     sex: undefined,
+  //     referringDoctor: "",
+  //     sampleId: `S-${Date.now().toString().slice(-6)}`,
+  //     collectionDateTime: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+  //   },
+  //   tests: {
+  //     malarialParasites: {
+  //       selected: false,
+  //       result: undefined,
+  //       pFalciparumResult: undefined,
+  //       pVivaxResult: undefined,
+  //       parasiteDensity: undefined,
+  //     },
+  //     dengueNS1: { selected: false, result: undefined },
+  //   },
+  //   technicianName: "",
+  //   verifiedBy: "",
+  //   verificationDate: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+  // });
+
   const [report, setReport] = useState<LabReport>({
     reportId: `REP-${format(new Date(), "yyyyMMdd")}-${String(
       Math.floor(Math.random() * 9999) + 1
@@ -402,19 +430,15 @@ const Index = () => {
       collectionDateTime: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
     },
     tests: {
-      malarialParasites: {
-        selected: false,
-        result: undefined,
-        pFalciparumResult: undefined,
-        pVivaxResult: undefined,
-        parasiteDensity: undefined,
-      },
-      dengueNS1: { selected: false, result: undefined },
+      malarialParasites: { selected: false },
+      dengueNS1: { selected: false },
+      urine: { selected: false },
     },
     technicianName: "",
     verifiedBy: "",
     verificationDate: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
   });
+  
 
   // ✅ Theme
   useEffect(() => {

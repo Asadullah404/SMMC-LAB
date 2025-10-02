@@ -34,44 +34,49 @@
 //   verifiedBy: string;
 //   verificationDate: string;
 // }
-
 export interface PatientInfo {
   name: string;
   relation: string;
-  age: number;
-  sex: 'Male' | 'Female' | 'Other';
+  age?: number;
+  sex?: "Male" | "Female" | "Other";
   referringDoctor: string;
   sampleId: string;
   collectionDateTime: string;
 }
 
-export interface TestResult {
-  testName: string;
-  result: 'Positive' | 'Negative';
-  species?: string[];
-  parasiteDensity?: number;
+export interface Tests {
+  malarialParasites: {
+    selected: boolean;
+    result?: "Positive" | "Negative";
+    pFalciparumResult?: "Positive" | "Negative";
+    pVivaxResult?: "Positive" | "Negative";
+    parasiteDensity?: number;
+  };
+  dengueNS1: {
+    selected: boolean;
+    result?: "Positive" | "Negative";
+  };
+  urine: {
+    selected: boolean;
+    volume?: string;
+    color?: string;
+    appearance?: string;
+    specificGravity?: string;
+    pH?: string;
+    protein?: string;
+    rbcs?: string;
+    wbcs?: string;
+    ketones?: string;
+    urobilinogen?: string;
+  };
 }
 
 export interface LabReport {
-  reportId: string;
+  reportId: string; // ✅ Add this
   patient: PatientInfo;
-  tests: {
-    malarialParasites: {
-      selected: boolean;
-      result?: 'Positive' | 'Negative';
-      // Individual species results - NEW FIELDS
-      pFalciparumResult?: 'Positive' | 'Negative';
-      pVivaxResult?: 'Positive' | 'Negative';
-      parasiteDensity?: number;
-      // Removed: species array is no longer needed
-      // species?: ('P. falciparum' | 'P. vivax')[];
-    };
-    dengueNS1: {
-      selected: boolean;
-      result?: 'Positive' | 'Negative';
-    };
-  };
+  tests: Tests;
   technicianName: string;
   verifiedBy: string;
   verificationDate: string;
+  notes?: string;   // ✅ Add this
 }
