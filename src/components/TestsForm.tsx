@@ -214,36 +214,71 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
         </div>
 
         {/* Urine Test */}
-        <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="urine"
-              checked={data.urine.selected}
-              onCheckedChange={(checked) =>
-                updateUrineTest({ selected: !!checked })
-              }
-            />
-            <Label htmlFor="urine" className="text-base font-medium flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4" />
-              Urine Analysis
-            </Label>
-          </div>
+       {/* Urine Test */}
+<div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+  <div className="flex items-center space-x-2">
+    <Checkbox
+      id="urine"
+      checked={data.urine.selected}
+      onCheckedChange={(checked) =>
+        updateUrineTest({ selected: !!checked })
+      }
+    />
+    <Label htmlFor="urine" className="text-base font-medium flex items-center gap-2">
+      <AlertTriangle className="h-4 w-4" />
+      Urine Analysis
+    </Label>
+  </div>
 
-          {data.urine.selected && (
-            <div className="ml-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input placeholder="Volume (ml)" value={data.urine.volume || ""} onChange={(e) => updateUrineTest({ volume: e.target.value })} />
-              <Input placeholder="Color" value={data.urine.color || ""} onChange={(e) => updateUrineTest({ color: e.target.value })} />
-              <Input placeholder="Appearance" value={data.urine.appearance || ""} onChange={(e) => updateUrineTest({ appearance: e.target.value })} />
-              <Input placeholder="Specific Gravity" value={data.urine.specificGravity || ""} onChange={(e) => updateUrineTest({ specificGravity: e.target.value })} />
-              <Input placeholder="pH" value={data.urine.pH || ""} onChange={(e) => updateUrineTest({ pH: e.target.value })} />
-              <Input placeholder="Protein" value={data.urine.protein || ""} onChange={(e) => updateUrineTest({ protein: e.target.value })} />
-              <Input placeholder="RBCs" value={data.urine.rbcs || ""} onChange={(e) => updateUrineTest({ rbcs: e.target.value })} />
-              <Input placeholder="WBCs" value={data.urine.wbcs || ""} onChange={(e) => updateUrineTest({ wbcs: e.target.value })} />
-              <Input placeholder="Ketones" value={data.urine.ketones || ""} onChange={(e) => updateUrineTest({ ketones: e.target.value })} />
-              <Input placeholder="Urobilinogen" value={data.urine.urobilinogen || ""} onChange={(e) => updateUrineTest({ urobilinogen: e.target.value })} />
-            </div>
-          )}
+  {data.urine.selected && (
+    <div className="ml-6 space-y-6">
+
+      {/* Physical Examination */}
+      <div>
+        <Label className="text-sm font-semibold block mb-2">Physical Examination</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input placeholder="Volume (ml)" value={data.urine.volume || ""} onChange={(e) => updateUrineTest({ volume: e.target.value })} />
+          <Input placeholder="Colour" value={data.urine.colour || ""} onChange={(e) => updateUrineTest({ colour: e.target.value })} />
+          <Input placeholder="Appearance" value={data.urine.appearance || ""} onChange={(e) => updateUrineTest({ appearance: e.target.value })} />
+          <Input placeholder="Specific Gravity" value={data.urine.specificGravity || ""} onChange={(e) => updateUrineTest({ specificGravity: e.target.value })} />
+          <Input placeholder="Reaction pH" value={data.urine.pH || ""} onChange={(e) => updateUrineTest({ pH: e.target.value })} />
         </div>
+      </div>
+
+      {/* Chemical Examination */}
+      <div>
+        <Label className="text-sm font-semibold block mb-2">Chemical Examination</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input placeholder="Protein" value={data.urine.protein || ""} onChange={(e) => updateUrineTest({ protein: e.target.value })} />
+          <Input placeholder="Glucose" value={data.urine.glucose || ""} onChange={(e) => updateUrineTest({ glucose: e.target.value })} />
+          <Input placeholder="Ketone Bodies" value={data.urine.ketoneBodies || ""} onChange={(e) => updateUrineTest({ ketoneBodies: e.target.value })} />
+          <Input placeholder="Urobilinogen" value={data.urine.urobilinogen || ""} onChange={(e) => updateUrineTest({ urobilinogen: e.target.value })} />
+          <Input placeholder="Bilirubin" value={data.urine.bilirubin || ""} onChange={(e) => updateUrineTest({ bilirubin: e.target.value })} />
+          <Input placeholder="Haemoglobin" value={data.urine.haemoglobin || ""} onChange={(e) => updateUrineTest({ haemoglobin: e.target.value })} />
+          <Input placeholder="Nitrite" value={data.urine.nitrite || ""} onChange={(e) => updateUrineTest({ nitrite: e.target.value })} />
+        </div>
+      </div>
+
+      {/* Microscopic Examination */}
+      <div>
+        <Label className="text-sm font-semibold block mb-2">Microscopic Examination</Label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Input placeholder="RBCs (/HPF)" value={data.urine.rbcs || ""} onChange={(e) => updateUrineTest({ rbcs: e.target.value })} />
+          <Input placeholder="WBCs (/HPF)" value={data.urine.wbcs || ""} onChange={(e) => updateUrineTest({ wbcs: e.target.value })} />
+          <Input placeholder="Leukocytes (/HPF)" value={data.urine.leukocytes || ""} onChange={(e) => updateUrineTest({ leukocytes: e.target.value })} />
+          <Input placeholder="Epithelial Cells" value={data.urine.epithelialCells || ""} onChange={(e) => updateUrineTest({ epithelialCells: e.target.value })} />
+          <Input placeholder="Bacteria" value={data.urine.bacteria || ""} onChange={(e) => updateUrineTest({ bacteria: e.target.value })} />
+          <Input placeholder="Yeast" value={data.urine.yeast || ""} onChange={(e) => updateUrineTest({ yeast: e.target.value })} />
+          <Input placeholder="Casts (/LPF)" value={data.urine.casts || ""} onChange={(e) => updateUrineTest({ casts: e.target.value })} />
+          <Input placeholder="Crystals" value={data.urine.crystals || ""} onChange={(e) => updateUrineTest({ crystals: e.target.value })} />
+          <Input placeholder="Others" value={data.urine.others || ""} onChange={(e) => updateUrineTest({ others: e.target.value })} />
+        </div>
+      </div>
+
+    </div>
+  )}
+</div>
+
 
       </CardContent>
     </Card>

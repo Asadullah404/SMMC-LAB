@@ -58,17 +58,35 @@ export interface Tests {
   };
   urine: {
     selected: boolean;
+  
+    // ✅ Physical
     volume?: string;
-    color?: string;
+    colour?: string;
     appearance?: string;
     specificGravity?: string;
     pH?: string;
+  
+    // ✅ Chemical
     protein?: string;
+    glucose?: string;
+    ketoneBodies?: string;
+    urobilinogen?: string;
+    bilirubin?: string;
+    haemoglobin?: string;
+    nitrite?: string;
+  
+    // ✅ Microscopic
     rbcs?: string;
     wbcs?: string;
-    ketones?: string;
-    urobilinogen?: string;
+    leukocytes?: string;
+    epithelialCells?: string;
+    bacteria?: string;
+    yeast?: string;
+    casts?: string;
+    crystals?: string;
+    others?: string;
   };
+  
 }
 
 export interface LabReport {
