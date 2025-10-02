@@ -1385,7 +1385,7 @@
 //           heading: "Physical Examination",
 //           fields: [
 //             { param: "Volume", result: u.volume || "N/A", unit: "ml", normal: "800 – 2000 ml / 24hr" },
-//             { param: "Colour", result: u.colour || "N/A", unit: "-", normal: "Pale Yellow - Yellow" },
+//             { param: "color", result: u.color || "N/A", unit: "-", normal: "Pale Yellow - Yellow" },
 //             { param: "Appearance", result: u.appearance || "N/A", unit: "-", normal: "Clear" },
 //             { param: "Specific Gravity", result: u.specificGravity || "N/A", unit: "-", normal: "1.005 – 1.025" },
 //             { param: "Reaction pH", result: u.pH || "N/A", unit: "-", normal: "5.0 – 8.0" },
@@ -1607,7 +1607,7 @@
 //       <p className="font-medium text-gray-700">Physical Examination</p>
 //       <ul className="text-sm pl-5 list-disc">
 //         <li>Volume: {report.tests.urine.volume || "N/A"}</li>
-//         <li>Color: {report.tests.urine.colour || "N/A"}</li>
+//         <li>Color: {report.tests.urine.color || "N/A"}</li>
 //         <li>Appearance: {report.tests.urine.appearance || "N/A"}</li>
 //         <li>Specific Gravity: {report.tests.urine.specificGravity || "N/A"}</li>
 //         <li>pH: {report.tests.urine.pH || "N/A"}</li>
@@ -1909,7 +1909,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
           heading: "Physical Examination",
           fields: [
             { param: "Volume", result: u.volume || "N/A", unit: "ml", normal: "800 – 2000 ml / 24hr" },
-            { param: "Colour", result: u.colour || "N/A", unit: "-", normal: "Pale Yellow - Yellow" },
+            { param: "color", result: u.color || "N/A", unit: "-", normal: "Pale Yellow - Yellow" },
             { param: "Appearance", result: u.appearance || "N/A", unit: "-", normal: "Clear" },
             { param: "Specific Gravity", result: u.specificGravity || "N/A", unit: "-", normal: "1.005 – 1.025" },
             { param: "Reaction pH", result: u.pH || "N/A", unit: "-", normal: "5.0 – 8.0" },
@@ -2197,7 +2197,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
                   <p className="font-medium text-gray-700">Physical Examination</p>
                   <ul className="text-sm pl-5 list-disc">
                     <li>Volume: {report.tests.urine.volume || "N/A"}</li>
-                    <li>Color: {report.tests.urine.colour || "N/A"}</li>
+                    <li>Color: {report.tests.urine.color || "N/A"}</li>
                     <li>Appearance: {report.tests.urine.appearance || "N/A"}</li>
                     <li>Specific Gravity: {report.tests.urine.specificGravity || "N/A"}</li>
                     <li>pH: {report.tests.urine.pH || "N/A"}</li>
