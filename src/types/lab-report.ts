@@ -61,7 +61,7 @@ export interface Tests {
   
     // ✅ Physical
     volume?: string;
-    colour?: string;
+    color?: string;
     appearance?: string;
     specificGravity?: string;
     pH?: string;
