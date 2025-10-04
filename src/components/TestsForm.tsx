@@ -238,7 +238,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
         <Label className="text-sm font-semibold block mb-2">Physical Examination</Label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input placeholder="Volume (ml)" value={data.urine.volume || ""} onChange={(e) => updateUrineTest({ volume: e.target.value })} />
-          <Input placeholder="Colour" value={data.urine.colour || ""} onChange={(e) => updateUrineTest({ colour: e.target.value })} />
+          <Input placeholder="color" value={data.urine.color || ""} onChange={(e) => updateUrineTest({ color: e.target.value })} />
           <Input placeholder="Appearance" value={data.urine.appearance || ""} onChange={(e) => updateUrineTest({ appearance: e.target.value })} />
           <Input placeholder="Specific Gravity" value={data.urine.specificGravity || ""} onChange={(e) => updateUrineTest({ specificGravity: e.target.value })} />
           <Input placeholder="Reaction pH" value={data.urine.pH || ""} onChange={(e) => updateUrineTest({ pH: e.target.value })} />
