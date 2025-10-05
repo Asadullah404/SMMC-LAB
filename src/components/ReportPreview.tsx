@@ -1932,7 +1932,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
           fields: [
             { param: "RBCs", result: u.rbcs || "N/A", unit: "/HPF", normal: "0 – 2 /HPF" },
             { param: "WBCs", result: u.wbcs || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-            { param: "Leukocytes", result: u.leukocytes || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
+            // { param: "Leukocytes", result: u.leukocytes || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
             { param: "Epithelial Cells", result: u.epithelialCells || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
             { param: "Bacteria", result: u.bacteria || "N/A", unit: "-", normal: "Nil" },
             { param: "Yeast", result: u.yeast || "N/A", unit: "-", normal: "Nil" },
@@ -2224,7 +2224,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
                   <ul className="text-sm pl-5 list-disc">
                     <li>RBCs: {report.tests.urine.rbcs || "N/A"}</li>
                     <li>WBCs: {report.tests.urine.wbcs || "N/A"}</li>
-                    <li>Leukocytes: {report.tests.urine.leukocytes || "N/A"}</li>
+                    {/* <li>Leukocytes: {report.tests.urine.leukocytes || "N/A"}</li> */}
                     <li>Epithelial Cells: {report.tests.urine.epithelialCells || "N/A"}</li>
                     <li>Bacteria: {report.tests.urine.bacteria || "N/A"}</li>
                     <li>Yeast: {report.tests.urine.yeast || "N/A"}</li>
