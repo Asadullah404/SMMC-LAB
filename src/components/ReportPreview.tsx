@@ -1879,7 +1879,23 @@ export function ReportPreview({ report }: ReportPreviewProps) {
     const otherRows: any[] = [];
 
     // Malarial Parasites
-    if (report.tests.malarialParasites.selected) {
+
+    //    if (report.tests.malarialParasites.selected) {
+    //   const result = report.tests.malarialParasites.result || "Pending";
+    //   const falciparum = report.tests.malarialParasites.pFalciparumResult
+    //     ? `P.falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
+    //     : "P. falciparum: Pending";
+    //   const vivax = report.tests.malarialParasites.pVivaxResult
+    //     ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
+    //     : "P. vivax: Pending";
+
+    //   otherRows.push(["Malarial Parasites", result, "-", [falciparum, vivax].join("\n"), "-"]);
+    //   if (report.tests.malarialParasites.parasiteDensity) {
+    //     otherRows.push(["Parasite Density", `${report.tests.malarialParasites.parasiteDensity}`, "parasites/µL", "0", "⚠"]);
+    //   }
+    // }
+   
+   if (report.tests.malarialParasites.selected) {
       const result = report.tests.malarialParasites.result || "Pending";
       const falciparum = report.tests.malarialParasites.pFalciparumResult
         ? `P.falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
