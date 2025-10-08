@@ -87,7 +87,7 @@
 // //     pdf.setFont('helvetica', 'bold');
 // //     pdf.text('Age / Gender:', leftColX, infoY);
 // //     pdf.setFont('helvetica', 'normal');
-// //     pdf.text(`${report.patient.age || 'N/A'} / ${report.patient.sex || 'N/A'}`, leftColX + 30, infoY);
+// //     pdf.text(`${report.patient.age || '-'} / ${report.patient.sex || '-'}`, leftColX + 30, infoY);
 
 // //     infoY += 6;
 // //     pdf.setFont('helvetica', 'bold');
@@ -461,7 +461,7 @@
 //     pdf.setFont('helvetica', 'bold');
 //     pdf.text('Age / Gender:', leftColX, infoY);
 //     pdf.setFont('helvetica', 'normal');
-//     pdf.text(`${report.patient.age || 'N/A'} / ${report.patient.sex || 'N/A'}`, leftColX + 30, infoY);
+//     pdf.text(`${report.patient.age || '-'} / ${report.patient.sex || '-'}`, leftColX + 30, infoY);
 
 //     infoY += 6;
 //     pdf.setFont('helvetica', 'bold');
@@ -522,15 +522,15 @@
 //       const u = report.tests.urine;
 //       tableRows.push(
 //         ["Urine Test", "-", "-", "-", "-"],
-//         ["Color", u.color || "N/A", "-", "Normal", "-"],
-//         ["Appearance", u.appearance || "N/A", "-", "Clear", "-"],
-//         ["Specific Gravity", u.specificGravity || "N/A", "-", "1.005–1.030", "-"],
-//         ["pH", u.pH || "N/A", "-", "4.6–8.0", "-"],
-//         ["Protein", u.protein || "N/A", "-", "Negative", "-"],
-//         ["RBCs", u.rbcs || "N/A", "-", "0–2 /hpf", "-"],
-//         ["WBCs", u.wbcs || "N/A", "-", "0–5 /hpf", "-"],
-//         ["Ketones", u.ketones || "N/A", "-", "Negative", "-"],
-//         ["Urobilinogen", u.urobilinogen || "N/A", "-", "Normal", "-"]
+//         ["Color", u.color || "-", "-", "Normal", "-"],
+//         ["Appearance", u.appearance || "-", "-", "Clear", "-"],
+//         ["Specific Gravity", u.specificGravity || "-", "-", "1.005–1.030", "-"],
+//         ["pH", u.pH || "-", "-", "4.6–8.0", "-"],
+//         ["Protein", u.protein || "-", "-", "Negative", "-"],
+//         ["RBCs", u.rbcs || "-", "-", "0–2 /hpf", "-"],
+//         ["WBCs", u.wbcs || "-", "-", "0–5 /hpf", "-"],
+//         ["Ketones", u.ketones || "-", "-", "Negative", "-"],
+//         ["Urobilinogen", u.urobilinogen || "-", "-", "Normal", "-"]
 //       );
 //     }
 
@@ -664,15 +664,15 @@
 //               <div className="bg-slate-50 p-4 rounded-lg border space-y-2 text-gray-900 dark:text-gray-900">
 //                 <p className="font-semibold">Urine Test:</p>
 //                 <ul className="text-sm pl-4 list-disc">
-//                   <li>Color: {report.tests.urine.color || "N/A"}</li>
-//                   <li>Appearance: {report.tests.urine.appearance || "N/A"}</li>
-//                   <li>Specific Gravity: {report.tests.urine.specificGravity || "N/A"}</li>
-//                   <li>pH: {report.tests.urine.pH || "N/A"}</li>
-//                   <li>Protein: {report.tests.urine.protein || "N/A"}</li>
-//                   <li>RBCs: {report.tests.urine.rbcs || "N/A"}</li>
-//                   <li>WBCs: {report.tests.urine.wbcs || "N/A"}</li>
-//                   <li>Ketones: {report.tests.urine.ketones || "N/A"}</li>
-//                   <li>Urobilinogen: {report.tests.urine.urobilinogen || "N/A"}</li>
+//                   <li>Color: {report.tests.urine.color || "-"}</li>
+//                   <li>Appearance: {report.tests.urine.appearance || "-"}</li>
+//                   <li>Specific Gravity: {report.tests.urine.specificGravity || "-"}</li>
+//                   <li>pH: {report.tests.urine.pH || "-"}</li>
+//                   <li>Protein: {report.tests.urine.protein || "-"}</li>
+//                   <li>RBCs: {report.tests.urine.rbcs || "-"}</li>
+//                   <li>WBCs: {report.tests.urine.wbcs || "-"}</li>
+//                   <li>Ketones: {report.tests.urine.ketones || "-"}</li>
+//                   <li>Urobilinogen: {report.tests.urine.urobilinogen || "-"}</li>
 //                 </ul>
 //               </div>
 //             )}
@@ -805,7 +805,7 @@
 //     pdf.setFont('helvetica', 'bold');
 //     pdf.text('Age / Gender:', leftColX, infoY);
 //     pdf.setFont('helvetica', 'normal');
-//     pdf.text(`${report.patient.age || 'N/A'} / ${report.patient.sex || 'N/A'}`, leftColX + 30, infoY);
+//     pdf.text(`${report.patient.age || '-'} / ${report.patient.sex || '-'}`, leftColX + 30, infoY);
 
 //     infoY += 6;
 //     pdf.setFont('helvetica', 'bold');
@@ -938,16 +938,16 @@
 
 //   // ✅ Patient’s observed results (from input)
 //   const urineResults = [
-//     `Volume: ${u.volume || "N/A"}`,
-//     `Color: ${u.color || "N/A"}`,
-//     `Appearance: ${u.appearance || "N/A"}`,
-//     `Specific Gravity: ${u.specificGravity || "N/A"}`,
-//     `pH: ${u.pH || "N/A"}`,
-//     `Protein: ${u.protein || "N/A"}`,
-//     `RBCs: ${u.rbcs || "N/A"}`,
-//     `WBCs: ${u.wbcs || "N/A"}`,
-//     `Ketones: ${u.ketones || "N/A"}`,
-//     `Urobilinogen: ${u.urobilinogen || "N/A"}`
+//     `Volume: ${u.volume || "-"}`,
+//     `Color: ${u.color || "-"}`,
+//     `Appearance: ${u.appearance || "-"}`,
+//     `Specific Gravity: ${u.specificGravity || "-"}`,
+//     `pH: ${u.pH || "-"}`,
+//     `Protein: ${u.protein || "-"}`,
+//     `RBCs: ${u.rbcs || "-"}`,
+//     `WBCs: ${u.wbcs || "-"}`,
+//     `Ketones: ${u.ketones || "-"}`,
+//     `Urobilinogen: ${u.urobilinogen || "-"}`
 //   ].join("\n");
 
 //   // ✅ Push row into PDF table
@@ -1111,15 +1111,15 @@
 //               <div className="bg-slate-50 p-4 rounded-lg border space-y-2 text-gray-900 dark:text-gray-900">
 //                 <p className="font-semibold">Urine Test:</p>
 //                 <ul className="text-sm pl-4 list-disc">
-//                   <li>Color: {report.tests.urine.color || "N/A"}</li>
-//                   <li>Appearance: {report.tests.urine.appearance || "N/A"}</li>
-//                   <li>Specific Gravity: {report.tests.urine.specificGravity || "N/A"}</li>
-//                   <li>pH: {report.tests.urine.pH || "N/A"}</li>
-//                   <li>Protein: {report.tests.urine.protein || "N/A"}</li>
-//                   <li>RBCs: {report.tests.urine.rbcs || "N/A"}</li>
-//                   <li>WBCs: {report.tests.urine.wbcs || "N/A"}</li>
-//                   <li>Ketones: {report.tests.urine.ketones || "N/A"}</li>
-//                   <li>Urobilinogen: {report.tests.urine.urobilinogen || "N/A"}</li>
+//                   <li>Color: {report.tests.urine.color || "-"}</li>
+//                   <li>Appearance: {report.tests.urine.appearance || "-"}</li>
+//                   <li>Specific Gravity: {report.tests.urine.specificGravity || "-"}</li>
+//                   <li>pH: {report.tests.urine.pH || "-"}</li>
+//                   <li>Protein: {report.tests.urine.protein || "-"}</li>
+//                   <li>RBCs: {report.tests.urine.rbcs || "-"}</li>
+//                   <li>WBCs: {report.tests.urine.wbcs || "-"}</li>
+//                   <li>Ketones: {report.tests.urine.ketones || "-"}</li>
+//                   <li>Urobilinogen: {report.tests.urine.urobilinogen || "-"}</li>
 //                 </ul>
 //               </div>
 //             )}
@@ -1313,7 +1313,7 @@
 //     pdf.setFont('helvetica', 'bold');
 //     pdf.text('Age / Gender:', leftColX, infoY);
 //     pdf.setFont('helvetica', 'normal');
-//     pdf.text(`${report.patient.age || 'N/A'} / ${report.patient.sex || 'N/A'}`, leftColX + 30, infoY);
+//     pdf.text(`${report.patient.age || '-'} / ${report.patient.sex || '-'}`, leftColX + 30, infoY);
 
 //     infoY += 6;
 //     pdf.setFont('helvetica', 'bold');
@@ -1384,37 +1384,37 @@
 //         {
 //           heading: "Physical Examination",
 //           fields: [
-//             { param: "Volume", result: u.volume || "N/A", unit: "ml", normal: "800 – 2000 ml / 24hr" },
-//             { param: "color", result: u.color || "N/A", unit: "-", normal: "Pale Yellow - Yellow" },
-//             { param: "Appearance", result: u.appearance || "N/A", unit: "-", normal: "Clear" },
-//             { param: "Specific Gravity", result: u.specificGravity || "N/A", unit: "-", normal: "1.005 – 1.025" },
-//             { param: "Reaction pH", result: u.pH || "N/A", unit: "-", normal: "5.0 – 8.0" },
+//             { param: "Volume", result: u.volume || "-", unit: "ml", normal: "800 – 2000 ml / 24hr" },
+//             { param: "color", result: u.color || "-", unit: "-", normal: "Pale Yellow - Yellow" },
+//             { param: "Appearance", result: u.appearance || "-", unit: "-", normal: "Clear" },
+//             { param: "Specific Gravity", result: u.specificGravity || "-", unit: "-", normal: "1.005 – 1.025" },
+//             { param: "Reaction pH", result: u.pH || "-", unit: "-", normal: "5.0 – 8.0" },
 //           ],
 //         },
 //         {
 //           heading: "Chemical Examination",
 //           fields: [
-//             { param: "Protein", result: u.protein || "N/A", unit: "-", normal: "Negative" },
-//             { param: "Glucose", result: u.glucose || "N/A", unit: "-", normal: "Negative" },
-//             { param: "Ketone Bodies", result: u.ketoneBodies || "N/A", unit: "-", normal: "Negative" },
-//             { param: "Urobilinogen", result: u.urobilinogen || "N/A", unit: "-", normal: "Normal" },
-//             { param: "Bilirubin", result: u.bilirubin || "N/A", unit: "-", normal: "Negative" },
-//             { param: "Haemoglobin", result: u.haemoglobin || "N/A", unit: "-", normal: "Negative" },
-//             { param: "Nitrite", result: u.nitrite || "N/A", unit: "-", normal: "Negative" },
+//             { param: "Protein", result: u.protein || "-", unit: "-", normal: "Negative" },
+//             { param: "Glucose", result: u.glucose || "-", unit: "-", normal: "Negative" },
+//             { param: "Ketone Bodies", result: u.ketoneBodies || "-", unit: "-", normal: "Negative" },
+//             { param: "Urobilinogen", result: u.urobilinogen || "-", unit: "-", normal: "Normal" },
+//             { param: "Bilirubin", result: u.bilirubin || "-", unit: "-", normal: "Negative" },
+//             { param: "Haemoglobin", result: u.haemoglobin || "-", unit: "-", normal: "Negative" },
+//             { param: "Nitrite", result: u.nitrite || "-", unit: "-", normal: "Negative" },
 //           ],
 //         },
 //         {
 //           heading: "Microscopic Examination",
 //           fields: [
-//             { param: "RBCs", result: u.rbcs || "N/A", unit: "/HPF", normal: "0 – 2 /HPF" },
-//             { param: "WBCs", result: u.wbcs || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-//             { param: "Leukocytes", result: u.leukocytes || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-//             { param: "Epithelial Cells", result: u.epithelialCells || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-//             { param: "Bacteria", result: u.bacteria || "N/A", unit: "-", normal: "Nil" },
-//             { param: "Yeast", result: u.yeast || "N/A", unit: "-", normal: "Nil" },
-//             { param: "Casts", result: u.casts || "N/A", unit: "/LPF", normal: "Nil /LPF" },
-//             { param: "Crystals", result: u.crystals || "N/A", unit: "-", normal: "Nil" },
-//             { param: "Others", result: u.others || "N/A", unit: "-", normal: "Nil" },
+//             { param: "RBCs", result: u.rbcs || "-", unit: "/HPF", normal: "0 – 2 /HPF" },
+//             { param: "WBCs", result: u.wbcs || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+//             { param: "Leukocytes", result: u.leukocytes || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+//             { param: "Epithelial Cells", result: u.epithelialCells || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+//             { param: "Bacteria", result: u.bacteria || "-", unit: "-", normal: "Nil" },
+//             { param: "Yeast", result: u.yeast || "-", unit: "-", normal: "Nil" },
+//             { param: "Casts", result: u.casts || "-", unit: "/LPF", normal: "Nil /LPF" },
+//             { param: "Crystals", result: u.crystals || "-", unit: "-", normal: "Nil" },
+//             { param: "Others", result: u.others || "-", unit: "-", normal: "Nil" },
 //           ],
 //         },
 //       ];
@@ -1606,11 +1606,11 @@
 //     <div>
 //       <p className="font-medium text-gray-700">Physical Examination</p>
 //       <ul className="text-sm pl-5 list-disc">
-//         <li>Volume: {report.tests.urine.volume || "N/A"}</li>
-//         <li>Color: {report.tests.urine.color || "N/A"}</li>
-//         <li>Appearance: {report.tests.urine.appearance || "N/A"}</li>
-//         <li>Specific Gravity: {report.tests.urine.specificGravity || "N/A"}</li>
-//         <li>pH: {report.tests.urine.pH || "N/A"}</li>
+//         <li>Volume: {report.tests.urine.volume || "-"}</li>
+//         <li>Color: {report.tests.urine.color || "-"}</li>
+//         <li>Appearance: {report.tests.urine.appearance || "-"}</li>
+//         <li>Specific Gravity: {report.tests.urine.specificGravity || "-"}</li>
+//         <li>pH: {report.tests.urine.pH || "-"}</li>
 //       </ul>
 //     </div>
 
@@ -1618,13 +1618,13 @@
 //     <div>
 //       <p className="font-medium text-gray-700">Chemical Examination</p>
 //       <ul className="text-sm pl-5 list-disc">
-//         <li>Protein: {report.tests.urine.protein || "N/A"}</li>
-//         <li>Glucose: {report.tests.urine.glucose || "N/A"}</li>
-//         <li>Ketone Bodies: {report.tests.urine.ketoneBodies || "N/A"}</li>
-//         <li>Urobilinogen: {report.tests.urine.urobilinogen || "N/A"}</li>
-//         <li>Bilirubin: {report.tests.urine.bilirubin || "N/A"}</li>
-//         <li>Haemoglobin: {report.tests.urine.haemoglobin || "N/A"}</li>
-//         <li>Nitrite: {report.tests.urine.nitrite || "N/A"}</li>
+//         <li>Protein: {report.tests.urine.protein || "-"}</li>
+//         <li>Glucose: {report.tests.urine.glucose || "-"}</li>
+//         <li>Ketone Bodies: {report.tests.urine.ketoneBodies || "-"}</li>
+//         <li>Urobilinogen: {report.tests.urine.urobilinogen || "-"}</li>
+//         <li>Bilirubin: {report.tests.urine.bilirubin || "-"}</li>
+//         <li>Haemoglobin: {report.tests.urine.haemoglobin || "-"}</li>
+//         <li>Nitrite: {report.tests.urine.nitrite || "-"}</li>
 //       </ul>
 //     </div>
 
@@ -1632,15 +1632,15 @@
 //     <div>
 //       <p className="font-medium text-gray-700">Microscopic Examination</p>
 //       <ul className="text-sm pl-5 list-disc">
-//         <li>RBCs: {report.tests.urine.rbcs || "N/A"}</li>
-//         <li>WBCs: {report.tests.urine.wbcs || "N/A"}</li>
-//         <li>Leukocytes: {report.tests.urine.leukocytes || "N/A"}</li>
-//         <li>Epithelial Cells: {report.tests.urine.epithelialCells || "N/A"}</li>
-//         <li>Bacteria: {report.tests.urine.bacteria || "N/A"}</li>
-//         <li>Yeast: {report.tests.urine.yeast || "N/A"}</li>
-//         <li>Casts: {report.tests.urine.casts || "N/A"}</li>
-//         <li>Crystals: {report.tests.urine.crystals || "N/A"}</li>
-//         <li>Others: {report.tests.urine.others || "N/A"}</li>
+//         <li>RBCs: {report.tests.urine.rbcs || "-"}</li>
+//         <li>WBCs: {report.tests.urine.wbcs || "-"}</li>
+//         <li>Leukocytes: {report.tests.urine.leukocytes || "-"}</li>
+//         <li>Epithelial Cells: {report.tests.urine.epithelialCells || "-"}</li>
+//         <li>Bacteria: {report.tests.urine.bacteria || "-"}</li>
+//         <li>Yeast: {report.tests.urine.yeast || "-"}</li>
+//         <li>Casts: {report.tests.urine.casts || "-"}</li>
+//         <li>Crystals: {report.tests.urine.crystals || "-"}</li>
+//         <li>Others: {report.tests.urine.others || "-"}</li>
 //       </ul>
 //     </div>
 //   </div>
@@ -1837,7 +1837,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
     pdf.setFont("helvetica", "bold");
     pdf.text("Age / Gender:", leftColX, infoY);
     pdf.setFont("helvetica", "normal");
-    pdf.text(`${report.patient.age || "N/A"} / ${report.patient.sex || "N/A"}`, leftColX + 30, infoY);
+    pdf.text(`${report.patient.age || "-"} / ${report.patient.sex || "-"}`, leftColX + 30, infoY);
 
     infoY += 6;
     pdf.setFont("helvetica", "bold");
@@ -1877,24 +1877,54 @@ export function ReportPreview({ report }: ReportPreviewProps) {
     // ----- Build table rows for tests -----
     const urineRows: RowInput[] = [];
     const otherRows: any[] = [];
+    // if (report.tests.malarialParasites.selected) {
+    //   const result = report.tests.malarialParasites.result || "Pending";
+    //   const falciparum = report.tests.malarialParasites.pFalciparumResult
+    //     ? `P.falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
+    //     : "P. falciparum: Pending";
+    //   const vivax = report.tests.malarialParasites.pVivaxResult
+    //     ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
+    //     : "P. vivax: Pending";
+
+    //   otherRows.push(["Malarial Parasites", result, "-", [falciparum, vivax].join("\n"), "-"]);
+    //   if (report.tests.malarialParasites.parasiteDensity) {
+    //     otherRows.push(["Parasite Density", `${report.tests.malarialParasites.parasiteDensity}`, "parasites/µL", "0", "⚠"]);
+    //   }
+    // }
 
     // Malarial Parasites
+if (report.tests.malarialParasites.selected) {
+  const result = report.tests.malarialParasites.result || "Pending";
 
-       if (report.tests.malarialParasites.selected) {
-      const result = report.tests.malarialParasites.result || "Pending";
-      const falciparum = report.tests.malarialParasites.pFalciparumResult
-        ? `P.falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
-        : "P. falciparum: Pending";
-      const vivax = report.tests.malarialParasites.pVivaxResult
-        ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
-        : "P. vivax: Pending";
+  const falciparum = report.tests.malarialParasites.pFalciparumResult
+    ? `P. falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
+    : "P. falciparum: Pending";
 
-      otherRows.push(["Malarial Parasites", result, "-", [falciparum, vivax].join("\n"), "-"]);
-      if (report.tests.malarialParasites.parasiteDensity) {
-        otherRows.push(["Parasite Density", `${report.tests.malarialParasites.parasiteDensity}`, "parasites/µL", "0", "⚠"]);
-      }
-    }
-   
+  const vivax = report.tests.malarialParasites.pVivaxResult
+    ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
+    : "P. vivax: Pending";
+
+  // Combine everything for the Result column
+  const detailedResult = [result, falciparum, vivax].join("\n");
+
+  otherRows.push([
+    "Malarial Parasites",  // First column (species info)
+    [falciparum, vivax].join("\n"),                  // Second column (Result + species detail)
+    "-",                             // Third column placeholder
+    [falciparum, vivax].join("\n"),  // Fourth column (again, species info)
+    "-"                              // Fifth column placeholder
+  ]);
+
+  if (report.tests.malarialParasites.parasiteDensity) {
+    otherRows.push([
+      "Parasite Density",
+      `${report.tests.malarialParasites.parasiteDensity}`,
+      "parasites/µL",
+      "0",
+      "⚠"
+    ]);
+  }
+}
 
 
     // Dengue
@@ -1911,37 +1941,37 @@ export function ReportPreview({ report }: ReportPreviewProps) {
         {
           heading: "Physical Examination",
           fields: [
-            { param: "Volume", result: u.volume || "N/A", unit: "ml", normal: "800 – 2000 ml / 24hr" },
-            { param: "color", result: u.color || "N/A", unit: "-", normal: "Pale Yellow - Yellow" },
-            { param: "Appearance", result: u.appearance || "N/A", unit: "-", normal: "Clear" },
-            { param: "Specific Gravity", result: u.specificGravity || "N/A", unit: "-", normal: "1.005 – 1.025" },
-            { param: "Reaction pH", result: u.pH || "N/A", unit: "-", normal: "5.0 – 8.0" },
+            { param: "Volume", result: u.volume || "-", unit: "ml", normal: "800 – 2000 ml / 24hr" },
+            { param: "color", result: u.color || "-", unit: "-", normal: "Pale Yellow - Yellow" },
+            { param: "Appearance", result: u.appearance || "-", unit: "-", normal: "Clear" },
+            { param: "Specific Gravity", result: u.specificGravity || "-", unit: "-", normal: "1.005 – 1.025" },
+            { param: "Reaction pH", result: u.pH || "-", unit: "-", normal: "5.0 – 8.0" },
           ],
         },
         {
           heading: "Chemical Examination",
           fields: [
-            { param: "Protein", result: u.protein || "N/A", unit: "-", normal: "Negative" },
-            { param: "Glucose", result: u.glucose || "N/A", unit: "-", normal: "Negative" },
-            { param: "Ketone Bodies", result: u.ketoneBodies || "N/A", unit: "-", normal: "Negative" },
-            { param: "Urobilinogen", result: u.urobilinogen || "N/A", unit: "-", normal: "Normal" },
-            { param: "Bilirubin", result: u.bilirubin || "N/A", unit: "-", normal: "Negative" },
-            { param: "Haemoglobin", result: u.haemoglobin || "N/A", unit: "-", normal: "Negative" },
-            { param: "Nitrite", result: u.nitrite || "N/A", unit: "-", normal: "Negative" },
+            { param: "Protein", result: u.protein || "-", unit: "-", normal: "Negative" },
+            { param: "Glucose", result: u.glucose || "-", unit: "-", normal: "Negative" },
+            { param: "Ketone Bodies", result: u.ketoneBodies || "-", unit: "-", normal: "Negative" },
+            { param: "Urobilinogen", result: u.urobilinogen || "-", unit: "-", normal: "Normal" },
+            { param: "Bilirubin", result: u.bilirubin || "-", unit: "-", normal: "Negative" },
+            { param: "Haemoglobin", result: u.haemoglobin || "-", unit: "-", normal: "Negative" },
+            { param: "Nitrite", result: u.nitrite || "-", unit: "-", normal: "Negative" },
           ],
         },
         {
           heading: "Microscopic Examination",
           fields: [
-            { param: "RBCs", result: u.rbcs || "N/A", unit: "/HPF", normal: "0 – 2 /HPF" },
-            { param: "WBCs", result: u.wbcs || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-            { param: "Leukocytes", result: u.leukocytes || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-            { param: "Epithelial Cells", result: u.epithelialCells || "N/A", unit: "/HPF", normal: "0 – 4 /HPF" },
-            { param: "Bacteria", result: u.bacteria || "N/A", unit: "-", normal: "Nil" },
-            { param: "Yeast", result: u.yeast || "N/A", unit: "-", normal: "Nil" },
-            { param: "Casts", result: u.casts || "N/A", unit: "/LPF", normal: "Nil /LPF" },
-            { param: "Crystals", result: u.crystals || "N/A", unit: "-", normal: "Nil" },
-            { param: "Others", result: u.others || "N/A", unit: "-", normal: "Nil" },
+            { param: "RBCs", result: u.rbcs || "-", unit: "/HPF", normal: "0 – 2 /HPF" },
+            { param: "WBCs", result: u.wbcs || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+            { param: "Leukocytes", result: u.leukocytes || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+            { param: "Epithelial Cells", result: u.epithelialCells || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+            { param: "Bacteria", result: u.bacteria || "-", unit: "-", normal: "Nil" },
+            { param: "Yeast", result: u.yeast || "-", unit: "-", normal: "Nil" },
+            { param: "Casts", result: u.casts || "-", unit: "/LPF", normal: "Nil /LPF" },
+            { param: "Crystals", result: u.crystals || "-", unit: "-", normal: "Nil" },
+            { param: "Others", result: u.others || "-", unit: "-", normal: "Nil" },
           ],
         },
       ];
@@ -2051,30 +2081,34 @@ export function ReportPreview({ report }: ReportPreviewProps) {
     //   });
     // }
 
-    autoTable(pdf, {
-      startY: testsStartY + 15,
-      margin: { left: 20, right: 20 },
-      head: [["Test", "Parameter", "Result", "Unit", "Normal Range", "Status"]],
-      body: urineRows,
-      theme: "grid",
-      styles: { fontSize: 9, cellPadding: 0.5, textColor: [55, 65, 81] },
-      headStyles: {
-        fillColor: [30, 58, 138],
-        textColor: [255, 255, 255],
-        fontSize: 10,
-        fontStyle: "bold",
-        halign: "center",
-      },
-      columnStyles: {
-        0: { halign: "left" },
-        1: { halign: "left" },
-        2: { halign: "center" },
-        3: { halign: "center" },
-        4: { halign: "left" },
-        5: { halign: "center" },
-      },
-      alternateRowStyles: { fillColor: [248, 250, 252] },
-    });
+    // ✅ Render urine table only if there are urine test rows
+if (urineRows.length > 0) {
+  autoTable(pdf, {
+    startY: testsStartY + 15,
+    margin: { left: 20, right: 20 },
+    head: [["Test", "Parameter", "Result", "Unit", "Normal Range", "Status"]],
+    body: urineRows,
+    theme: "grid",
+    styles: { fontSize: 9, cellPadding: 0.5, textColor: [55, 65, 81] },
+    headStyles: {
+      fillColor: [30, 58, 138],
+      textColor: [255, 255, 255],
+      fontSize: 10,
+      fontStyle: "bold",
+      halign: "center",
+    },
+    columnStyles: {
+      0: { halign: "left" },
+      1: { halign: "left" },
+      2: { halign: "center" },
+      3: { halign: "center" },
+      4: { halign: "left" },
+      5: { halign: "center" },
+    },
+    alternateRowStyles: { fillColor: [248, 250, 252] },
+  });
+}
+
     
 
     // Render other tests table if exists
@@ -2095,7 +2129,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
         },
         columnStyles: {
           0: { fontStyle: "bold", halign: "left" },
-          1: { halign: "center" },
+          1: { halign: "left" },
           2: { halign: "center" },
           3: { halign: "left" },
           4: { halign: "center", fontSize: 12 },
@@ -2199,11 +2233,11 @@ export function ReportPreview({ report }: ReportPreviewProps) {
                 <div>
                   <p className="font-medium text-gray-700">Physical Examination</p>
                   <ul className="text-sm pl-5 list-disc">
-                    <li>Volume: {report.tests.urine.volume || "N/A"}</li>
-                    <li>Color: {report.tests.urine.color || "N/A"}</li>
-                    <li>Appearance: {report.tests.urine.appearance || "N/A"}</li>
-                    <li>Specific Gravity: {report.tests.urine.specificGravity || "N/A"}</li>
-                    <li>pH: {report.tests.urine.pH || "N/A"}</li>
+                    <li>Volume: {report.tests.urine.volume || "-"}</li>
+                    <li>Color: {report.tests.urine.color || "-"}</li>
+                    <li>Appearance: {report.tests.urine.appearance || "-"}</li>
+                    <li>Specific Gravity: {report.tests.urine.specificGravity || "-"}</li>
+                    <li>pH: {report.tests.urine.pH || "-"}</li>
                   </ul>
                 </div>
 
@@ -2211,13 +2245,13 @@ export function ReportPreview({ report }: ReportPreviewProps) {
                 <div>
                   <p className="font-medium text-gray-700">Chemical Examination</p>
                   <ul className="text-sm pl-5 list-disc">
-                    <li>Protein: {report.tests.urine.protein || "N/A"}</li>
-                    <li>Glucose: {report.tests.urine.glucose || "N/A"}</li>
-                    <li>Ketone Bodies: {report.tests.urine.ketoneBodies || "N/A"}</li>
-                    <li>Urobilinogen: {report.tests.urine.urobilinogen || "N/A"}</li>
-                    <li>Bilirubin: {report.tests.urine.bilirubin || "N/A"}</li>
-                    <li>Haemoglobin: {report.tests.urine.haemoglobin || "N/A"}</li>
-                    <li>Nitrite: {report.tests.urine.nitrite || "N/A"}</li>
+                    <li>Protein: {report.tests.urine.protein || "-"}</li>
+                    <li>Glucose: {report.tests.urine.glucose || "-"}</li>
+                    <li>Ketone Bodies: {report.tests.urine.ketoneBodies || "-"}</li>
+                    <li>Urobilinogen: {report.tests.urine.urobilinogen || "-"}</li>
+                    <li>Bilirubin: {report.tests.urine.bilirubin || "-"}</li>
+                    <li>Haemoglobin: {report.tests.urine.haemoglobin || "-"}</li>
+                    <li>Nitrite: {report.tests.urine.nitrite || "-"}</li>
                   </ul>
                 </div>
 
@@ -2225,15 +2259,15 @@ export function ReportPreview({ report }: ReportPreviewProps) {
                 <div>
                   <p className="font-medium text-gray-700">Microscopic Examination</p>
                   <ul className="text-sm pl-5 list-disc">
-                    <li>RBCs: {report.tests.urine.rbcs || "N/A"}</li>
-                    <li>WBCs: {report.tests.urine.wbcs || "N/A"}</li>
-                    <li>Leukocytes: {report.tests.urine.leukocytes || "N/A"}</li>
-                    <li>Epithelial Cells: {report.tests.urine.epithelialCells || "N/A"}</li>
-                    <li>Bacteria: {report.tests.urine.bacteria || "N/A"}</li>
-                    <li>Yeast: {report.tests.urine.yeast || "N/A"}</li>
-                    <li>Casts: {report.tests.urine.casts || "N/A"}</li>
-                    <li>Crystals: {report.tests.urine.crystals || "N/A"}</li>
-                    <li>Others: {report.tests.urine.others || "N/A"}</li>
+                    <li>RBCs: {report.tests.urine.rbcs || "-"}</li>
+                    <li>WBCs: {report.tests.urine.wbcs || "-"}</li>
+                    <li>Leukocytes: {report.tests.urine.leukocytes || "-"}</li>
+                    <li>Epithelial Cells: {report.tests.urine.epithelialCells || "-"}</li>
+                    <li>Bacteria: {report.tests.urine.bacteria || "-"}</li>
+                    <li>Yeast: {report.tests.urine.yeast || "-"}</li>
+                    <li>Casts: {report.tests.urine.casts || "-"}</li>
+                    <li>Crystals: {report.tests.urine.crystals || "-"}</li>
+                    <li>Others: {report.tests.urine.others || "-"}</li>
                   </ul>
                 </div>
               </div>
