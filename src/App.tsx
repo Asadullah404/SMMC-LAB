@@ -6,6 +6,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Reports from "./pages/Reports";  // ✅ default export
+import PrescriptionPage from "@/components/PrescriptionPage";
+
+
 
 
 const queryClient = new QueryClient();
@@ -19,7 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/report/:id" element={<Reports />} />
-
+          <Route path="/prescription" element={<PrescriptionPage />} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
