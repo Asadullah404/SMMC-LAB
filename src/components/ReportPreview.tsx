@@ -1888,7 +1888,7 @@ export function ReportPreview({ report }: ReportPreviewProps) {
         ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
         : "P. vivax: Pending";
 
-      otherRows.push(["Malarial Parasites", result, "-", [falciparum, vivax].join("\n"), "-"]);
+      otherRows.push([[falciparum, vivax].join("\n"), result, "-", [falciparum, vivax].join("\n"), "-"]);
       if (report.tests.malarialParasites.parasiteDensity) {
         otherRows.push(["Parasite Density", `${report.tests.malarialParasites.parasiteDensity}`, "parasites/µL", "0", "⚠"]);
       }
