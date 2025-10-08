@@ -1895,20 +1895,38 @@ export function ReportPreview({ report }: ReportPreviewProps) {
     //   }
     // }
    
-   if (report.tests.malarialParasites.selected) {
-      const result = report.tests.malarialParasites.result || "Pending";
-      const falciparum = report.tests.malarialParasites.pFalciparumResult
-        ? `P.falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
-        : "P. falciparum: Pending";
-      const vivax = report.tests.malarialParasites.pVivaxResult
-        ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
-        : "P. vivax: Pending";
+if (report.tests.malarialParasites.selected) {
+  const result = report.tests.malarialParasites.result || "Pending";
 
-      otherRows.push([[falciparum, vivax].join("\n"), result, "-", [falciparum, vivax].join("\n"), "-"]);
-      if (report.tests.malarialParasites.parasiteDensity) {
-        otherRows.push(["Parasite Density", `${report.tests.malarialParasites.parasiteDensity}`, "parasites/µL", "0", "⚠"]);
-      }
-    }
+  const falciparum = report.tests.malarialParasites.pFalciparumResult
+    ? `P. falciparum: ${report.tests.malarialParasites.pFalciparumResult}`
+    : "P. falciparum: Pending";
+
+  const vivax = report.tests.malarialParasites.pVivaxResult
+    ? `P. vivax: ${report.tests.malarialParasites.pVivaxResult}`
+    : "P. vivax: Pending";
+
+  // Combine everything for the Result column
+  const detailedResult = [result, falciparum, vivax].join("\n");
+
+  otherRows.push([
+    [falciparum, vivax].join("\n"),  // First column (species info)
+    detailedResult,                  // Second column (Result + species detail)
+    "-",                             // Third column placeholder
+    [falciparum, vivax].join("\n"),  // Fourth column (again, species info)
+    "-"                              // Fifth column placeholder
+  ]);
+
+  if (report.tests.malarialParasites.parasiteDensity) {
+    otherRows.push([
+      "Parasite Density",
+      `${report.tests.malarialParasites.parasiteDensity}`,
+      "parasites/µL",
+      "0",
+      "⚠"
+    ]);
+  }
+}
 
     // Dengue
     if (report.tests.dengueNS1.selected) {
