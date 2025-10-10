@@ -2111,6 +2111,15 @@
 
 
 
+
+
+
+
+
+
+
+
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -2863,51 +2872,78 @@ export default function PrescriptionPage(): JSX.Element {
             </CardContent>
           </Card>
         )}
-
-        {/* Vitals Card */}
+               {/* Vitals Card */}
         <Card className="shadow-lg border-slate-200 dark:border-slate-700 mt-6">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white">
-            <div className="flex items-center gap-3">
-              <User className="h-6 w-6" />
-              <CardTitle className="text-xl">Vitals</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-6 bg-white dark:bg-slate-800">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {isViewMode ? (
-                <>
-                  <div>
-                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Blood Pressure</Label>
-                    <Input
-                      placeholder="e.g., 120/80"
-                      value={vitals.bp}
-                      onChange={(e) => setVitals({ ...vitals, bp: e.target.value })}
-                      className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Weight (kg)</Label>
-                    <Input
-                      placeholder="e.g., 70"
-                      value={vitals.weight}
-                      onChange={(e) => setVitals({ ...vitals, weight: e.target.value })}
-                      className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Temperature (°C)</Label>
-                    <Input
-                      placeholder="e.g., 37.0"
-                      value={vitals.temp}
-                      onChange={(e) => setVitals({ ...vitals, temp: e.target.value })}
-                      className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
-                    />
-                  </div>
-                </>
-              ) : null}
-            </div>
-          </CardContent>
-        </Card>
+        <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white">
+          <div className="flex items-center gap-3">
+            <User className="h-6 w-6" />
+            <CardTitle className="text-xl">Vitals</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6 bg-white dark:bg-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {isViewMode ? (
+              <>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Oxygen (%)</Label>
+                  <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">{vitals.oxygen || "-"}</p>
+                </div>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Blood Pressure</Label>
+                  <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">{vitals.bp || "-"}</p>
+                </div>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Weight (kg)</Label>
+                  <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">{vitals.weight || "-"}</p>
+                </div>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Temperature (°C)</Label>
+                  <p className="text-lg font-semibold text-slate-900 dark:text-white mt-1">{vitals.temp || "-"}</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Oxygen (%)</Label>
+                  <Input
+                    placeholder="e.g., 98"
+                    value={vitals.oxygen}
+                    onChange={(e) => setVitals({ ...vitals, oxygen: e.target.value })}
+                    className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Blood Pressure</Label>
+                  <Input
+                    placeholder="e.g., 120/80"
+                    value={vitals.bp}
+                    onChange={(e) => setVitals({ ...vitals, bp: e.target.value })}
+                    className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Weight (kg)</Label>
+                  <Input
+                    placeholder="e.g., 70"
+                    value={vitals.weight}
+                    onChange={(e) => setVitals({ ...vitals, weight: e.target.value })}
+                    className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">Temperature (°C)</Label>
+                  <Input
+                    placeholder="e.g., 37.0"
+                    value={vitals.temp}
+                    onChange={(e) => setVitals({ ...vitals, temp: e.target.value })}
+                    className="h-10 dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
         {/* Search Medicine Card - Only show in edit mode */}
         {!isViewMode && (
