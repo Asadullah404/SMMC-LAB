@@ -1965,7 +1965,7 @@ if (report.tests.malarialParasites.selected) {
           fields: [
             { param: "RBCs", result: u.rbcs || "-", unit: "/HPF", normal: "0 – 2 /HPF" },
             { param: "WBCs", result: u.wbcs || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
-            { param: "Leukocytes", result: u.leukocytes || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
+            // { param: "Leukocytes", result: u.leukocytes || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
             { param: "Epithelial Cells", result: u.epithelialCells || "-", unit: "/HPF", normal: "0 – 4 /HPF" },
             { param: "Bacteria", result: u.bacteria || "-", unit: "-", normal: "Nil" },
             { param: "Yeast", result: u.yeast || "-", unit: "-", normal: "Nil" },
