@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { LabReport } from "@/types/lab-report";
-import { TestTube, Bug, AlertTriangle } from "lucide-react";
+import { TestTube, Bug, AlertTriangle, Activity } from "lucide-react";
 
 interface TestsFormProps {
   data: LabReport["tests"];
@@ -28,6 +28,24 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
     onChange({
       ...data,
       dengueNS1: { ...data.dengueNS1, ...updates },
+    });
+  };
+
+  const updateHepBsAgTest = (
+    updates: Partial<NonNullable<LabReport["tests"]["hepBsAg"]>>
+  ) => {
+    onChange({
+      ...data,
+      hepBsAg: { selected: false, ...data.hepBsAg, ...updates },
+    });
+  };
+
+  const updateAntiHCVTest = (
+    updates: Partial<NonNullable<LabReport["tests"]["antiHCV"]>>
+  ) => {
+    onChange({
+      ...data,
+      antiHCV: { selected: false, ...data.antiHCV, ...updates },
     });
   };
 
@@ -206,6 +224,98 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
                 <div className="mt-3">
                   <Badge variant={data.dengueNS1.result === "Positive" ? "destructive" : "secondary"}>
                     Dengue NS1: {data.dengueNS1.result}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Hep Bs Ag Test */}
+        <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="hepBsAg"
+              checked={data.hepBsAg?.selected ?? false}
+              onCheckedChange={(checked) =>
+                updateHepBsAgTest({ selected: !!checked, result: undefined })
+              }
+            />
+            <Label htmlFor="hepBsAg" className="text-base font-medium flex items-center gap-2 cursor-pointer">
+              <Activity className="h-4 w-4" />
+              <span>Hep Bs Ag</span>
+              <span className="text-xs text-muted-foreground font-normal">(performed by ICT)</span>
+            </Label>
+          </div>
+
+          {data.hepBsAg?.selected && (
+            <div className="ml-6">
+              <Label className="text-sm font-medium">Result</Label>
+              <Select
+                value={data.hepBsAg.result || ""}
+                onValueChange={(value: "Reactive" | "Non-Reactive") =>
+                  updateHepBsAgTest({ result: value })
+                }
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select result" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Non-Reactive">Non-Reactive</SelectItem>
+                  <SelectItem value="Reactive">Reactive</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {data.hepBsAg.result && (
+                <div className="mt-3">
+                  <Badge variant={data.hepBsAg.result === "Reactive" ? "destructive" : "secondary"}>
+                    Hep Bs Ag: {data.hepBsAg.result}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* ANTI-HCV Antibodies Test */}
+        <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="antiHCV"
+              checked={data.antiHCV?.selected ?? false}
+              onCheckedChange={(checked) =>
+                updateAntiHCVTest({ selected: !!checked, result: undefined })
+              }
+            />
+            <Label htmlFor="antiHCV" className="text-base font-medium flex items-center gap-2 cursor-pointer">
+              <Activity className="h-4 w-4" />
+              <span>ANTI-HCV Antibodies</span>
+              <span className="text-xs text-muted-foreground font-normal">(performed by ICT)</span>
+            </Label>
+          </div>
+
+          {data.antiHCV?.selected && (
+            <div className="ml-6">
+              <Label className="text-sm font-medium">Result</Label>
+              <Select
+                value={data.antiHCV.result || ""}
+                onValueChange={(value: "Reactive" | "Non-Reactive") =>
+                  updateAntiHCVTest({ result: value })
+                }
+              >
+                <SelectTrigger className="mt-1">
+                  <SelectValue placeholder="Select result" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Non-Reactive">Non-Reactive</SelectItem>
+                  <SelectItem value="Reactive">Reactive</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {data.antiHCV.result && (
+                <div className="mt-3">
+                  <Badge variant={data.antiHCV.result === "Reactive" ? "destructive" : "secondary"}>
+                    ANTI-HCV Antibodies: {data.antiHCV.result}
                   </Badge>
                 </div>
               )}

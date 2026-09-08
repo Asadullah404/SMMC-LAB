@@ -432,6 +432,8 @@ const Index = () => {
     tests: {
       malarialParasites: { selected: false },
       dengueNS1: { selected: false },
+      hepBsAg: { selected: false },
+      antiHCV: { selected: false },
       urine: { selected: false },
     },
     technicianName: "",

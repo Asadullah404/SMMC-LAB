@@ -4760,8 +4760,8 @@ export function ReportPreview({ report }: ReportPreviewProps) {
   };
 
   const getResultBadge = (result?: string) => {
-    if (result === "Positive") return <Badge variant="destructive">Positive</Badge>;
-    if (result === "Negative") return <Badge className="bg-success text-success-foreground">Negative</Badge>;
+    if (result === "Positive" || result === "Reactive") return <Badge variant="destructive">{result}</Badge>;
+    if (result === "Negative" || result === "Non-Reactive") return <Badge className="bg-success text-success-foreground">{result}</Badge>;
     return <Badge variant="secondary">Pending</Badge>;
   };
 
@@ -4936,6 +4936,18 @@ const vivax = vivaxLabel.padEnd(21) + pViv;
     if (report.tests.dengueNS1.selected) {
       const result = report.tests.dengueNS1.result || "Pending";
       otherRows.push(["Dengue NS1 Antigen", "                          "+result, "-", "Positive", "-"]);
+    }
+
+    // Hep Bs Ag
+    if (report.tests.hepBsAg?.selected) {
+      const result = report.tests.hepBsAg.result || "Pending";
+      otherRows.push(["Hep Bs Ag\n(performed by ICT)", "                          " + result, "-", "Non-Reactive", "-"]);
+    }
+
+    // ANTI-HCV Antibodies
+    if (report.tests.antiHCV?.selected) {
+      const result = report.tests.antiHCV.result || "Pending";
+      otherRows.push(["ANTI-HCV Antibodies\n(performed by ICT)", "                          " + result, "-", "Non-Reactive", "-"]);
     }
 
     // Urine Test (grouped)
@@ -5228,6 +5240,30 @@ if (urineRows.length > 0) {
                 <p className="font-semibold">
                   Dengue NS1 Antigen: {getResultBadge(report.tests.dengueNS1.result)}
                 </p>
+              </div>
+            )}
+
+            {report.tests.hepBsAg?.selected && (
+              <div className="bg-slate-50 p-4 rounded-lg border space-y-2 text-gray-900 dark:text-gray-900">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-base">Hep Bs Ag</p>
+                    <p className="text-xs text-muted-foreground italic">(performed by ICT)</p>
+                  </div>
+                  {getResultBadge(report.tests.hepBsAg.result)}
+                </div>
+              </div>
+            )}
+
+            {report.tests.antiHCV?.selected && (
+              <div className="bg-slate-50 p-4 rounded-lg border space-y-2 text-gray-900 dark:text-gray-900">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold text-base">ANTI-HCV Antibodies</p>
+                    <p className="text-xs text-muted-foreground italic">(performed by ICT)</p>
+                  </div>
+                  {getResultBadge(report.tests.antiHCV.result)}
+                </div>
               </div>
             )}
 

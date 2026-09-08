@@ -56,6 +56,14 @@ export interface Tests {
     selected: boolean;
     result?: "Positive" | "Negative";
   };
+  hepBsAg?: {
+    selected: boolean;
+    result?: "Reactive" | "Non-Reactive";
+  };
+  antiHCV?: {
+    selected: boolean;
+    result?: "Reactive" | "Non-Reactive";
+  };
   urine: {
     selected: boolean;
   
