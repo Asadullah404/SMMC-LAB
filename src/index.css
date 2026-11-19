@@ -2,120 +2,121 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Medical Laboratory Design System - Professional Clinical Interface */
+/* ==========================================================================
+   SMMC LABORATORY & DIAGNOSTIC SYSTEM - UI PRO MAX (ROYAL BLUE THEME)
+   Clinical Sapphire Aesthetics, High Contrast Typography, Crisp Cards & Absolute Stability
+   ========================================================================== */
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 215 25% 15%;
+    /* Soft Clinical Slate Background */
+    --background: 210 40% 98%;          /* #f8fafc */
+    --foreground: 222 47% 11%;          /* #0f172a - Deepest Slate Navy */
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card: 0 0% 100%;                  /* Pure Clean White */
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 210 85% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 210 85% 55%;
+    /* Royal Blue Primary System */
+    --primary: 221 83% 53%;             /* #2563eb - Royal Clinical Blue */
+    --primary-foreground: 0 0% 100%;    /* Crisp White */
+    --primary-glow: 217 91% 60%;        /* #3b82f6 - Vibrant Sapphire */
+    --primary-dark: 224 64% 33%;        /* #1e3a8a - Deep Naval Blue */
 
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 215 25% 25%;
+    --secondary: 214 32% 95%;           /* #f1f5f9 - Soft Slate Blue */
+    --secondary-foreground: 222 47% 16%;
 
-    --muted: 210 15% 95%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 210 40% 96%;               /* #f1f5f9 */
+    --muted-foreground: 215 16% 47%;    /* #64748b - Slate Neutral */
 
-    --accent: 210 40% 92%;
-    --accent-foreground: 215 25% 25%;
+    --accent: 214 95% 93%;              /* #dbeafe - Soft Ice Blue Accent */
+    --accent-foreground: 224 76% 28%;   /* #1e40af */
 
-    --destructive: 0 75% 55%;
+    --destructive: 0 84% 60%;           /* #ef4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --success: 140 70% 45%;
+    --success: 142 71% 45%;             /* #22c55e */
     --success-foreground: 0 0% 100%;
 
-    --warning: 35 85% 55%;
+    --warning: 38 92% 50%;              /* #f59e0b */
     --warning-foreground: 0 0% 100%;
 
-    --border: 210 20% 88%;
-    --input: 210 20% 94%;
-    --ring: 210 85% 45%;
+    --border: 214 32% 91%;              /* #e2e8f0 - Crisp clean slate border */
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
 
     --radius: 0.75rem;
 
-    /* Medical gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --gradient-header: linear-gradient(135deg, hsl(var(--primary) / 0.95), hsl(var(--primary-glow) / 0.9));
+    /* Royal Medical Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(221, 83%, 53%), hsl(224, 76%, 42%));
+    --gradient-subtle: linear-gradient(180deg, #ffffff, hsl(214, 32%, 97%));
+    --gradient-header: linear-gradient(135deg, hsl(224, 64%, 28%), hsl(221, 83%, 50%));
     
-    /* Medical shadows */
-    --shadow-medical: 0 4px 20px hsl(var(--primary) / 0.1);
-    --shadow-card: 0 2px 10px hsl(var(--foreground) / 0.08);
-    --shadow-report: 0 8px 30px hsl(var(--foreground) / 0.12);
+    /* Professional Elevation Shadows */
+    --shadow-medical: 0 8px 30px rgba(37, 99, 235, 0.15);
+    --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.05), 0 4px 12px rgba(15, 23, 42, 0.03);
+    --shadow-report: 0 10px 40px rgba(15, 23, 42, 0.12);
 
-    /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 214 95% 93%;
+    --sidebar-accent-foreground: 224 76% 28%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 221 83% 53%;
   }
 
   .dark {
-    --background: 215 25% 8%;
-    --foreground: 210 20% 92%;
+    /* Obsidian Navy Dark Mode */
+    --background: 222 47% 7%;           /* #0b1120 - Elite Deep Navy */
+    --foreground: 210 40% 98%;          /* #f8fafc */
 
-    --card: 215 25% 10%;
-    --card-foreground: 210 20% 92%;
+    --card: 222 47% 11%;               /* #0f172a - Naval Card Surface */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 215 25% 10%;
-    --popover-foreground: 210 20% 92%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 210 85% 55%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 210 85% 65%;
+    --primary: 217 91% 60%;             /* #3b82f6 - Radiant Sapphire Glow */
+    --primary-foreground: 222 47% 7%;
+    --primary-glow: 213 94% 68%;
+    --primary-dark: 224 76% 48%;
 
-    --secondary: 215 25% 15%;
-    --secondary-foreground: 210 20% 85%;
+    --secondary: 217 33% 17%;           /* #1e293b */
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 215 25% 12%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 215 25% 15%;
-    --accent-foreground: 210 20% 85%;
+    --accent: 224 64% 20%;              /* Dark Blue Tint */
+    --accent-foreground: 213 94% 68%;
 
     --destructive: 0 75% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 140 70% 50%;
+    --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
 
-    --warning: 35 85% 60%;
+    --warning: 38 90% 55%;
     --warning-foreground: 0 0% 100%;
 
-    --border: 215 25% 18%;
-    --input: 215 25% 15%;
-    --ring: 210 85% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 217 91% 60%;
+
+    --sidebar-background: 222 47% 9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 7%;
+    --sidebar-accent: 224 64% 20%;
+    --sidebar-accent-foreground: 213 94% 68%;
+    --sidebar-border: 217 33% 20%;
+    --sidebar-ring: 217 91% 60%;
   }
 }
 
@@ -125,7 +126,8 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans antialiased;
+    letter-spacing: -0.01em;
   }
 
   .medical-gradient {
@@ -143,4 +145,20 @@
   .transition-medical {
     transition: var(--transition-smooth);
   }
+}
+
+/* Custom Scrollbar for Clinical Precision */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6);
 }

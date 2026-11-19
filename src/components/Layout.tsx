@@ -22,7 +22,7 @@ interface LayoutProps {
   children: ReactNode;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
-  user: any;
+  user: { displayName?: string | null; email?: string | null; photoURL?: string | null } | null;
   role: string | null;
   handleLogin: () => Promise<void>;
   handleLogout: () => Promise<void>;

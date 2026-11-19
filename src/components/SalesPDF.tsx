@@ -26,6 +26,12 @@ type GenerateSalePDFParams = {
   withHeader: boolean;
 };
 
+type ExtendedJsPdf = jsPDF & {
+  setGState: (gstate: unknown) => void;
+  GState: new (options: { opacity: number }) => unknown;
+  lastAutoTable?: { finalY: number };
+};
+
 export const generateSalePDF = async ({
   cart,
   patient,
@@ -34,6 +40,7 @@ export const generateSalePDF = async ({
 }: GenerateSalePDFParams): Promise<void> => {
   try {
     const doc = new jsPDF({ compress: true });
+    const extDoc = doc as unknown as ExtendedJsPdf;
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
@@ -81,9 +88,9 @@ export const generateSalePDF = async ({
       const y = (pageHeight - logoSize) / 2;
       
       // Set low opacity for watermark
-      (doc as any).setGState(new (doc as any).GState({ opacity: 0.06 }));
+      extDoc.setGState(new extDoc.GState({ opacity: 0.06 }));
       doc.addImage(base64, "PNG", x, y, logoSize, logoSize);
-      (doc as any).setGState(new (doc as any).GState({ opacity: 1 }));
+      extDoc.setGState(new extDoc.GState({ opacity: 1 }));
     } catch (err) {
       console.error("Failed to load watermark logo:", err);
       // Continue without watermark if it fails
@@ -141,7 +148,7 @@ export const generateSalePDF = async ({
         cellPadding: 5,
       },
       headStyles: {
-        fillColor: [0, 102, 204],
+        fillColor: [29, 78, 216], // Royal Sapphire Blue
         textColor: [255, 255, 255],
         fontStyle: "bold",
       },
@@ -149,8 +156,8 @@ export const generateSalePDF = async ({
 
     // 🔹 TOTAL AMOUNT
     const totalAmount = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const finalY = (doc as any).lastAutoTable 
-      ? (doc as any).lastAutoTable.finalY + 10 
+    const finalY = extDoc.lastAutoTable 
+      ? extDoc.lastAutoTable.finalY + 10 
       : yPos + 80;
 
     doc.setFont("helvetica", "bold");
