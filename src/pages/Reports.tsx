@@ -9,12 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Download, Printer, ArrowLeft, AlertTriangle, FileText } from "lucide-react";
+import { Download, Printer, ArrowLeft, AlertTriangle, FileText, MapPin } from "lucide-react";
 import { getTestTemplates, getCanvasTemplate } from "@/lib/testStorage";
 import { downloadReportAsPdf, printReportAsPdf } from "@/lib/dynamicPdfGenerator";
 import { TestTemplate, DynamicReportRecord } from "@/types/dynamic-test";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { useFooterSettings } from "@/lib/footerSettings";
+import FooterSettingsModal from "@/components/FooterSettingsModal";
 
 export default function Reports() {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +29,8 @@ export default function Reports() {
   const [showOnlyPatientName, setShowOnlyPatientName] = useState(false);
   const [isPrinting, setIsPrinting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const { settings: footerSettings } = useFooterSettings();
+  const [addressModalOpen, setAddressModalOpen] = useState(false);
 
   useEffect(() => {
     fetchReportAndTests();
@@ -259,7 +263,7 @@ export default function Reports() {
                   <h2 className="text-xl sm:text-2xl font-black text-blue-900 dark:text-blue-400 tracking-wide">
                     SMMC LABORATORY REPORT
                   </h2>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">ISO 15189 Certified Diagnostic Center</p>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Quality Diagnostic Center</p>
                   <Badge variant="outline" className="mx-auto mt-2 font-mono text-xs border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950">
                     {report.reportId}
                   </Badge>
@@ -378,12 +382,39 @@ export default function Reports() {
                       {report.verifiedBy}
                     </div>
                   </div>
+
+                  {/* Footer Address & Contact Preview */}
+                  <div
+                    onClick={() => setAddressModalOpen(true)}
+                    className="mt-3 pt-2 text-center text-xs text-slate-500 border-t border-slate-200 dark:border-slate-800 flex flex-wrap justify-center items-center gap-2 cursor-pointer hover:bg-blue-50/60 dark:hover:bg-slate-800/60 p-2 rounded-lg transition-colors border border-dashed border-blue-200 dark:border-blue-800"
+                    title="Click to edit clinic address and phone number in Firebase"
+                  >
+                    <MapPin className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">
+                      {footerSettings.showContactInfo && footerSettings.address ? footerSettings.address : "Click here to add Clinic / Lab Address"}
+                    </span>
+                    {footerSettings.showContactInfo && footerSettings.phone && (
+                      <>
+                        <span>•</span>
+                        <span className="font-medium text-slate-600 dark:text-slate-400">Tel: {footerSettings.phone}</span>
+                      </>
+                    )}
+                    <span className="text-[11px] font-bold text-blue-600 hover:underline ml-1">
+                      (Edit Address & Phone)
+                    </span>
+                  </div>
                 </CardContent>
               </div>
             </Card>
           </div>
         )}
       </div>
+
+      {/* Address & Footer Settings Modal (Synced with Firebase) */}
+      <FooterSettingsModal
+        open={addressModalOpen}
+        onOpenChange={setAddressModalOpen}
+      />
     </AppLayout>
   );
 }

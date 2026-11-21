@@ -243,7 +243,7 @@ export const createDefaultCanvasTemplate = (testId: string, testName: string): C
         visible: true,
         config: {
           title: "SMMC LABORATORY REPORT",
-          customText: "ISO 15189 Certified Diagnostic Center",
+          customText: "Quality Diagnostic Center",
           headerImageUrl: "/header.png",
           showBorders: false,
         },
@@ -304,7 +304,7 @@ export const createDefaultCanvasTemplate = (testId: string, testName: string): C
         width: 186,
         visible: true,
         config: {
-          title: "Digitally Verified & Authorized",
+          title: "Authorized Diagnostic Examination",
           customText: "This report is computer-generated and electronically verified. No manual signature required.",
           showBorders: false,
         },

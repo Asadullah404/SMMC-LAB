@@ -3,6 +3,7 @@ import { jsPDF } from "jspdf";
 import autoTable, { RowInput } from "jspdf-autotable";
 import { format } from "date-fns";
 import { TestTemplate, CanvasTemplate, DynamicReportRecord } from "@/types/dynamic-test";
+import { getFooterSettings } from "./footerSettings";
 
 export interface GeneratePdfOptions {
   report: DynamicReportRecord;
@@ -200,7 +201,7 @@ export async function generateDynamicReportPDF({
     doc.setTextColor(71, 85, 105);
     doc.text("Department of Pathology & Clinical Laboratory Services", 36, yPos + 12);
     doc.setTextColor(37, 99, 235);
-    doc.text("ISO 15189:2022 Certified | Quality Assured Diagnostic Center", 36, yPos + 16.5);
+    doc.text("Quality Assured Diagnostic Center", 36, yPos + 16.5);
 
     yPos += 22;
   }
@@ -221,7 +222,7 @@ export async function generateDynamicReportPDF({
   doc.setTextColor(100, 116, 139);
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
-  doc.text("ISO 15189 Certified Diagnostic Center", pageWidth / 2 + 5, yPos + 5, { align: "center" });
+  doc.text("Quality Diagnostic Center", pageWidth / 2 + 5, yPos + 5, { align: "center" });
 
   // Right Report ID Pill Badge
   doc.setFillColor(239, 246, 255); // Ice Blue #eff6ff
@@ -538,21 +539,6 @@ export async function generateDynamicReportPDF({
   doc.setTextColor(100, 116, 139);
   doc.text("B.Sc. MLT | Quality Control Verified", 16, sigY + 11.5);
 
-  // Center: Official Digital Verification Shield Badge (Pure ASCII)
-  doc.setFillColor(239, 246, 255);
-  doc.setDrawColor(191, 219, 254);
-  doc.roundedRect(pageWidth / 2 - 26, sigY - 2, 52, 9.5, 1.5, 1.5, "FD");
-
-  doc.setFontSize(7.5);
-  doc.setFont("helvetica", "bold");
-  doc.setTextColor(29, 78, 216);
-  doc.text("[ DIGITALLY VERIFIED ]", pageWidth / 2, sigY + 2.5, { align: "center" });
-
-  doc.setFontSize(6.5);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(71, 85, 105);
-  doc.text("ISO 15189 Quality Protocol", pageWidth / 2, sigY + 6.2, { align: "center" });
-
   // Right: Consultant Pathologist
   doc.setDrawColor(203, 213, 225);
   doc.setLineWidth(0.2);
@@ -573,6 +559,12 @@ export async function generateDynamicReportPDF({
   doc.text("Consultant Pathologist & Lab Director", pageWidth - 16, sigY + 11.5, { align: "right" });
 
   // 6. Pagination & Audit Footer Across All Pages
+  const footerSettings = getFooterSettings();
+  const showContactInPdf =
+    footerSettings.showInPdf &&
+    footerSettings.showContactInfo &&
+    Boolean(footerSettings.address || footerSettings.phone);
+
   const totalPages = doc.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
@@ -584,7 +576,15 @@ export async function generateDynamicReportPDF({
     doc.setFontSize(6.5);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 116, 139);
-    doc.text("SMMC Clinical Diagnostic Laboratory | Emergency & Routine Pathology Services", 12, pageHeight - 5.5);
+
+    if (showContactInPdf) {
+      const parts: string[] = [];
+      if (footerSettings.address) parts.push(cleanAscii(footerSettings.address));
+      if (footerSettings.phone) parts.push(`Tel: ${cleanAscii(footerSettings.phone)}`);
+      doc.text(parts.join("  |  "), 12, pageHeight - 5.5);
+    } else {
+      doc.text("SMMC Clinical Diagnostic Laboratory | Emergency & Routine Pathology Services", 12, pageHeight - 5.5);
+    }
     doc.text("Computer-generated report. No physical signature required.", pageWidth / 2, pageHeight - 5.5, { align: "center" });
 
     doc.setFont("helvetica", "bold");

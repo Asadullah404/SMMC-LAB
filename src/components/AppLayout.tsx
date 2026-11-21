@@ -26,7 +26,12 @@ import {
   Menu,
   ShieldCheck,
   ChevronRight,
+  MapPin,
+  Phone,
+  SlidersHorizontal,
 } from "lucide-react";
+import FooterSettingsModal from "@/components/FooterSettingsModal";
+import { useFooterSettings } from "@/lib/footerSettings";
 import { auth, loginWithGoogle, logout, db } from "@/firebase";
 import type { User as FirebaseUser } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -49,6 +54,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [searchCode, setSearchCode] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [footerModalOpen, setFooterModalOpen] = useState(false);
+  const { settings: footerSettings } = useFooterSettings();
 
   // Sync theme
   useEffect(() => {
@@ -367,6 +374,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
                             </div>
                             <ChevronRight className="h-4 w-4 text-slate-400" />
                           </Link>
+                          <button
+                            type="button"
+                            onClick={() => setFooterModalOpen(true)}
+                            className="w-full flex items-center justify-between p-2.5 rounded-lg text-sm hover:bg-slate-100 dark:hover:bg-slate-800/80 transition font-medium text-left"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <MapPin className="h-4 w-4 text-blue-600" />
+                              <span>Add / Edit Address & Footer</span>
+                            </div>
+                            <ChevronRight className="h-4 w-4 text-slate-400" />
+                          </button>
                         </div>
                       </div>
                     )}
@@ -448,6 +466,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   </Link>
                 );
               })}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setFooterModalOpen(true);
+                }}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition text-left w-full"
+              >
+                <MapPin className="h-4 w-4 text-blue-600" />
+                Add / Edit Address & Contact
+              </button>
             </div>
           </SheetContent>
         </Sheet>
@@ -458,20 +488,71 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
 
-      {/* Modern Footer in Royal Blue & Slate */}
-      <footer className="border-t border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-[#0f172a]/80 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
-        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© {new Date().getFullYear()} SMMC Laboratory Diagnostic Information Systems</p>
-          <div className="flex items-center gap-4 text-xs font-medium">
-            <span className="text-blue-600 dark:text-blue-400 font-bold flex items-center gap-1.5">
-              <span className="inline-block h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
-              ISO 15189 Verified
-            </span>
-            <Link to="/admin/tests" className="text-blue-600 dark:text-blue-400 hover:underline">Admin Hub</Link>
-            <Link to="/admin/templates" className="text-blue-600 dark:text-blue-400 hover:underline">Canvas Designer</Link>
+      {/* Modern Footer */}
+      {footerSettings.showFooter ? (
+        <footer className="border-t border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-[#0f172a]/80 py-5 text-xs text-slate-500 dark:text-slate-400">
+          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            {/* Copyright & Organization */}
+            <div className="text-center md:text-left">
+              <p className="font-medium text-slate-700 dark:text-slate-300">
+                © {new Date().getFullYear()} {footerSettings.customText || "SMMC Laboratory Diagnostic Information Systems"}
+              </p>
+            </div>
+
+            {/* Address & Phone Number (If enabled & configured) */}
+            {footerSettings.showContactInfo && (footerSettings.address || footerSettings.phone) && (
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-slate-600 dark:text-slate-400 text-xs">
+                {footerSettings.address && (
+                  <span className="inline-flex items-center gap-1.5 font-normal">
+                    <MapPin className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                    <span>{footerSettings.address}</span>
+                  </span>
+                )}
+                {footerSettings.phone && (
+                  <a
+                    href={`tel:${footerSettings.phone.replace(/[^0-9+]/g, "")}`}
+                    className="inline-flex items-center gap-1.5 font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  >
+                    <Phone className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
+                    <span>{footerSettings.phone}</span>
+                  </a>
+                )}
+              </div>
+            )}
+
+            {/* Navigation Quicklinks */}
+            <div className="flex items-center gap-3 text-xs font-medium">
+              <Link to="/admin/tests" className="text-blue-600 dark:text-blue-400 hover:underline">
+                Admin Hub
+              </Link>
+              <span className="text-slate-300 dark:text-slate-700">|</span>
+              <Link to="/admin/templates" className="text-blue-600 dark:text-blue-400 hover:underline">
+                Canvas Designer
+              </Link>
+            </div>
           </div>
+        </footer>
+      ) : (
+        /* Floating unhide / configure button when user hides footer */
+        <div className="fixed bottom-3 right-3 z-30">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setFooterModalOpen(true)}
+            className="shadow-md bg-white/95 dark:bg-slate-900/95 border-slate-200 dark:border-slate-800 text-[11px] h-8 gap-1.5 text-slate-600 dark:text-slate-300 hover:text-blue-600"
+            title="Website footer is hidden. Click to configure or unhide."
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5 text-blue-600" />
+            <span>Footer Hidden</span>
+          </Button>
         </div>
-      </footer>
+      )}
+
+      {/* Footer & Contact Configuration Dialog */}
+      <FooterSettingsModal
+        open={footerModalOpen}
+        onOpenChange={setFooterModalOpen}
+      />
     </div>
   );
 }

@@ -28,7 +28,12 @@ import {
   Sparkles,
   Layers,
   HelpCircle,
+  MapPin,
+  Phone,
+  Edit3,
 } from "lucide-react";
+import FooterSettingsModal from "@/components/FooterSettingsModal";
+import { useFooterSettings } from "@/lib/footerSettings";
 import { TestTemplate, CanvasTemplate } from "@/types/dynamic-test";
 import { getTestTemplates, getCanvasTemplate, saveCanvasTemplate } from "@/lib/testStorage";
 import { downloadReportAsPdf, printReportAsPdf } from "@/lib/dynamicPdfGenerator";
@@ -43,6 +48,8 @@ export default function AdminCanvasDesigner() {
   const [zoomLevel, setZoomLevel] = useState<number>(85);
   const [isSaving, setIsSaving] = useState(false);
   const [mobileTab, setMobileTab] = useState<"sheet" | "settings">("sheet");
+  const [addressModalOpen, setAddressModalOpen] = useState(false);
+  const { settings: footerSettings, updateSettings: updateFooterSettings } = useFooterSettings();
 
   // Drag and Drop state
   const [draggedBlockIndex, setDraggedBlockIndex] = useState<number | null>(null);
@@ -462,6 +469,65 @@ export default function AdminCanvasDesigner() {
               </CardContent>
             </Card>
 
+            {/* Permanent Clinic Address & Contact Card (Always visible in Canvas Designer) */}
+            <Card className="shadow-xs border-blue-200 dark:border-blue-800 bg-gradient-to-br from-white to-blue-50/40 dark:from-slate-900 dark:to-blue-950/20">
+              <CardHeader className="pb-2.5 pt-3.5 px-4 border-b border-blue-100 dark:border-blue-900/40 bg-blue-50/80 dark:bg-blue-950/60 rounded-t-xl">
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xs font-bold text-blue-900 dark:text-blue-200 flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-blue-600" />
+                    Clinic Address & Contact (Firebase)
+                  </CardTitle>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setAddressModalOpen(true)}
+                    className="h-6 text-[11px] text-blue-600 dark:text-blue-400 px-1.5 font-bold"
+                  >
+                    Open Modal
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="p-4 space-y-3">
+                <div>
+                  <Label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <MapPin className="h-3 w-3 text-blue-600" />
+                    Clinic / Lab Address
+                  </Label>
+                  <Input
+                    value={footerSettings.address}
+                    onChange={(e) => updateFooterSettings({ address: e.target.value })}
+                    placeholder="e.g. SMMC Complex, Main Boulevard"
+                    className="mt-1 text-xs"
+                  />
+                  <p className="text-[10px] text-slate-400 mt-0.5">Saves to Firebase & shows in canvas/PDF.</p>
+                </div>
+
+                <div>
+                  <Label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+                    <Phone className="h-3 w-3 text-blue-600" />
+                    Contact Phone / Number
+                  </Label>
+                  <Input
+                    value={footerSettings.phone}
+                    onChange={(e) => updateFooterSettings({ phone: e.target.value })}
+                    placeholder="e.g. +92 300 1234567"
+                    className="mt-1 text-xs"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800">
+                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    Show in Canvas & PDF:
+                  </span>
+                  <Switch
+                    checked={footerSettings.showContactInfo}
+                    onCheckedChange={(val) => updateFooterSettings({ showContactInfo: val })}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Block Property Inspector */}
             {selectedBlock && (
               <Card className="shadow-xs border-blue-100 dark:border-blue-900/50">
@@ -604,7 +670,7 @@ export default function AdminCanvasDesigner() {
                       <div>
                         <Label className="text-xs font-semibold">Verification Title</Label>
                         <Input
-                          value={selectedBlock.config.title || "Digitally Verified"}
+                          value={selectedBlock.config.title || "Authorized Examination"}
                           onChange={(e) => updateSelectedBlockConfig("title", e.target.value)}
                           className="mt-1 text-xs"
                         />
@@ -616,6 +682,52 @@ export default function AdminCanvasDesigner() {
                           onChange={(e) => updateSelectedBlockConfig("customText", e.target.value)}
                           className="mt-1 text-xs"
                         />
+                      </div>
+
+                      {/* Address & Contact in Canvas Block */}
+                      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-xs font-bold text-blue-900 dark:text-blue-300 flex items-center gap-1.5">
+                            <MapPin className="h-3.5 w-3.5 text-blue-600" />
+                            Clinic Address & Phone
+                          </Label>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setAddressModalOpen(true)}
+                            className="h-6 text-[11px] text-blue-600 dark:text-blue-400 px-1 font-bold"
+                          >
+                            Full Settings
+                          </Button>
+                        </div>
+                        <div>
+                          <Label className="text-[11px] text-slate-500">Address (Firebase)</Label>
+                          <Input
+                            value={footerSettings.address}
+                            onChange={(e) => updateFooterSettings({ address: e.target.value })}
+                            placeholder="e.g. SMMC Complex, Main Boulevard"
+                            className="mt-1 text-xs"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-[11px] text-slate-500">Phone Number (Firebase)</Label>
+                          <Input
+                            value={footerSettings.phone}
+                            onChange={(e) => updateFooterSettings({ phone: e.target.value })}
+                            placeholder="e.g. +92 300 1234567"
+                            className="mt-1 text-xs"
+                          />
+                        </div>
+                        <div className="flex items-center justify-between pt-1">
+                          <span className="text-[11px] font-medium text-slate-600 dark:text-slate-400">
+                            Show in Canvas & PDF:
+                          </span>
+                          <Switch
+                            checked={footerSettings.showContactInfo}
+                            onCheckedChange={(val) => updateFooterSettings({ showContactInfo: val })}
+                          />
+                        </div>
                       </div>
                     </div>
                   )}
@@ -707,7 +819,7 @@ export default function AdminCanvasDesigner() {
                             {block.config.title || "SMMC LABORATORY REPORT"}
                           </h1>
                           <p className="text-[10px] text-blue-600 font-medium">
-                            {block.config.customText || "ISO 15189 Certified Diagnostic Center"}
+                            {block.config.customText || "Quality Diagnostic Center"}
                           </p>
                           <div className="mt-2 inline-block bg-blue-50 border border-blue-300 text-blue-800 text-[10px] font-bold px-4 py-0.5 rounded-full">
                             REPORT ID: REP-20261119-0001
@@ -841,6 +953,30 @@ export default function AdminCanvasDesigner() {
                 })}
               </div>
 
+              {/* Interactive Canvas Footer Strip (Shows Address & Phone) */}
+              <div
+                onClick={() => setAddressModalOpen(true)}
+                className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between text-[9px] text-slate-500 bg-blue-50/60 hover:bg-blue-100/70 dark:bg-slate-900/60 p-2 rounded-md cursor-pointer border border-dashed border-blue-300 dark:border-blue-800 transition-colors"
+                title="Click to edit clinic address and phone number in Firebase"
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  <MapPin className="h-3 w-3 text-blue-600 shrink-0" />
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
+                    {footerSettings.showContactInfo && footerSettings.address ? footerSettings.address : "Add Clinic / Lab Address here"}
+                  </span>
+                  {footerSettings.showContactInfo && footerSettings.phone && (
+                    <>
+                      <span>•</span>
+                      <span className="text-slate-600 dark:text-slate-400 font-medium">Tel: {footerSettings.phone}</span>
+                    </>
+                  )}
+                </div>
+                <span className="text-[9px] font-bold text-blue-700 dark:text-blue-400 flex items-center gap-1 mt-1 sm:mt-0 underline">
+                  <Edit3 className="h-2.5 w-2.5" />
+                  Edit Address (Firebase)
+                </span>
+              </div>
+
               <div className="text-[9px] text-slate-400 text-center pt-2">
                 SMMC Clinical Diagnostic Laboratory Management System
               </div>
@@ -849,6 +985,12 @@ export default function AdminCanvasDesigner() {
           </div>
         </div>
       </div>
+
+      {/* Address & Footer Settings Modal (Synced with Firebase) */}
+      <FooterSettingsModal
+        open={addressModalOpen}
+        onOpenChange={setAddressModalOpen}
+      />
     </AppLayout>
   );
 }

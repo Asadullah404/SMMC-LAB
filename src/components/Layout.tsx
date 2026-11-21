@@ -16,7 +16,10 @@ import {
   User,
   LogOut,
   Search,
+  MapPin,
+  Phone,
 } from "lucide-react";
+import { useFooterSettings } from "@/lib/footerSettings";
 
 interface LayoutProps {
   children: ReactNode;
@@ -43,6 +46,7 @@ const Layout = ({
   setSearchCode,
   handleSearch,
 }: LayoutProps) => {
+  const { settings: footerSettings } = useFooterSettings();
   return (
     <div className="min-h-screen bg-background transition-medical flex flex-col">
       {/* Header */}
@@ -201,11 +205,29 @@ const Layout = ({
       </main>
 
       {/* Footer */}
-      <footer className="border-t bg-muted/50 mt-auto">
-        <div className="container mx-auto px-2 sm:px-4 py-4 text-center text-xs md:text-sm text-muted-foreground">
-          © 2025 Laboratory Report Generator
-        </div>
-      </footer>
+      {footerSettings.showFooter && (
+        <footer className="border-t bg-muted/50 mt-auto py-4">
+          <div className="container mx-auto px-2 sm:px-4 text-center text-xs md:text-sm text-muted-foreground space-y-2">
+            <p>© {new Date().getFullYear()} {footerSettings.customText || "Laboratory Report Generator"}</p>
+            {footerSettings.showContactInfo && (footerSettings.address || footerSettings.phone) && (
+              <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
+                {footerSettings.address && (
+                  <span className="flex items-center gap-1">
+                    <MapPin className="h-3 w-3 text-blue-600" />
+                    {footerSettings.address}
+                  </span>
+                )}
+                {footerSettings.phone && (
+                  <span className="flex items-center gap-1">
+                    <Phone className="h-3 w-3 text-blue-600" />
+                    {footerSettings.phone}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </footer>
+      )}
     </div>
   );
 };
