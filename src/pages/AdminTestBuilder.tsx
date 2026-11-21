@@ -74,6 +74,7 @@ export default function AdminTestBuilder() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [activePreview, setActivePreview] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"catalog" | "editor">("catalog");
 
   // Field edit modal state
   const [fieldModalOpen, setFieldModalOpen] = useState(false);
@@ -99,6 +100,7 @@ export default function AdminTestBuilder() {
   const handleSelectTest = (test: TestTemplate) => {
     setSelectedTest(JSON.parse(JSON.stringify(test)));
     setIsEditing(false);
+    setMobileTab("editor");
   };
 
   const handleCreateNewTest = () => {
@@ -118,6 +120,7 @@ export default function AdminTestBuilder() {
 
     setSelectedTest(newTest);
     setIsEditing(true);
+    setMobileTab("editor");
   };
 
   const handleDuplicateTest = (test: TestTemplate) => {
@@ -132,6 +135,7 @@ export default function AdminTestBuilder() {
     };
     setSelectedTest(dup);
     setIsEditing(true);
+    setMobileTab("editor");
     toast({ title: "Test Duplicated", description: "You can now modify the copied test." });
   };
 
@@ -349,9 +353,35 @@ export default function AdminTestBuilder() {
           </div>
         </div>
 
+        {/* Mobile View Switcher (lg:hidden) */}
+        <div className="lg:hidden flex rounded-xl bg-blue-50/80 dark:bg-blue-950/50 p-1 border border-blue-200 dark:border-blue-900 mt-4">
+          <button
+            type="button"
+            onClick={() => setMobileTab("catalog")}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+              mobileTab === "catalog"
+                ? "bg-blue-600 text-white shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-blue-700"
+            }`}
+          >
+            Catalog ({filteredTests.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab("editor")}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+              mobileTab === "editor"
+                ? "bg-blue-600 text-white shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-blue-700"
+            }`}
+          >
+            {selectedTest ? `${selectedTest.name.slice(0, 18)}...` : "Parameter Editor"}
+          </button>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
           {/* Left Column: Test Directory Catalog */}
-          <div className="lg:col-span-4 space-y-4">
+          <div className={`lg:col-span-4 space-y-4 ${mobileTab === "catalog" ? "block" : "hidden lg:block"}`}>
             <Card className="shadow-xs border-slate-200 dark:border-slate-800">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base font-semibold flex items-center justify-between">
@@ -430,7 +460,7 @@ export default function AdminTestBuilder() {
           </div>
 
           {/* Right Column: Test Editor / Field Configuration */}
-          <div className="lg:col-span-8 space-y-6">
+          <div className={`lg:col-span-8 space-y-6 ${mobileTab === "editor" ? "block" : "hidden lg:block"}`}>
             {selectedTest ? (
               <>
                 {/* Test Meta Card */}
@@ -620,7 +650,7 @@ export default function AdminTestBuilder() {
 
         {/* Live Form Preview Drawer / Modal */}
         <Dialog open={activePreview} onOpenChange={setActivePreview}>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="w-[95vw] sm:max-w-2xl max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-blue-600" />
@@ -676,7 +706,7 @@ export default function AdminTestBuilder() {
 
         {/* Modal: Add/Edit Parameter Field */}
         <Dialog open={fieldModalOpen} onOpenChange={setFieldModalOpen}>
-          <DialogContent className="max-w-xl max-h-[85vh] overflow-y-auto">
+          <DialogContent className="w-[95vw] sm:max-w-xl max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-lg font-bold">
                 {editingField ? "Edit Parameter Field" : "Add New Parameter"}
@@ -834,7 +864,7 @@ export default function AdminTestBuilder() {
 
         {/* Modal: Add Section */}
         <Dialog open={sectionModalOpen} onOpenChange={setSectionModalOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="w-[95vw] sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Add Category Section</DialogTitle>
             </DialogHeader>

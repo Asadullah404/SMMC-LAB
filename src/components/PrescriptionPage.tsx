@@ -441,7 +441,7 @@ export default function PrescriptionPage(): JSX.Element {
                     inventory.map((med) => (
                       <div
                         key={med.id}
-                        className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3 bg-white dark:bg-slate-950"
+                        className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-950"
                       >
                         <div>
                           <p className="font-bold text-xs text-slate-900 dark:text-white">{med.name}</p>
@@ -450,21 +450,21 @@ export default function PrescriptionPage(): JSX.Element {
                           </p>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                           <Input
                             type="number"
                             placeholder="Qty"
                             value={selectedQty[med.id] ?? ""}
                             onChange={(e) => setSelectedQty({ ...selectedQty, [med.id]: Number(e.target.value) })}
-                            className="w-16 h-8 text-xs text-center"
+                            className="w-16 h-8 text-xs text-center shrink-0"
                           />
                           <Input
                             placeholder="Dosage / notes"
                             value={selectedNotes[med.id] || ""}
                             onChange={(e) => setSelectedNotes({ ...selectedNotes, [med.id]: e.target.value })}
-                            className="w-32 h-8 text-xs"
+                            className="flex-1 sm:w-32 h-8 text-xs"
                           />
-                          <Button size="sm" onClick={() => handleAddToPrescription(med)} className="h-8 text-xs gap-1 bg-blue-600 hover:bg-blue-700">
+                          <Button size="sm" onClick={() => handleAddToPrescription(med)} className="h-8 text-xs gap-1 bg-blue-600 hover:bg-blue-700 shrink-0">
                             <Plus className="h-3 w-3" /> Add
                           </Button>
                         </div>
@@ -497,95 +497,97 @@ export default function PrescriptionPage(): JSX.Element {
                 No medications added to this prescription yet.
               </div>
             ) : (
-              <table className="w-full text-xs text-left">
-                <thead className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold border-b">
-                  <tr>
-                    <th className="p-3 w-10">#</th>
-                    <th className="p-3">Medicine</th>
-                    <th className="p-3 text-center">Dosage</th>
-                    <th className="p-3 text-center w-20">Qty</th>
-                    <th className="p-3 text-right">Price</th>
-                    <th className="p-3 text-right">Total</th>
-                    <th className="p-3">Instructions</th>
-                    {!isViewMode && <th className="p-3 text-center w-12">Action</th>}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {prescription.map((item, idx) => (
-                    <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50">
-                      <td className="p-3 font-mono text-slate-400">{idx + 1}</td>
-                      <td className="p-3 font-bold text-slate-900 dark:text-white">{item.name}</td>
-                      <td className="p-3 text-center">
-                        {isViewMode ? (
-                          item.dosage || "-"
-                        ) : (
-                          <Input
-                            value={item.dosage || ""}
-                            onChange={(e) => handleEditItem(item.id, "dosage", e.target.value)}
-                            placeholder="e.g. 1-0-1"
-                            className="h-7 text-xs text-center w-24 mx-auto"
-                          />
-                        )}
-                      </td>
-                      <td className="p-3 text-center font-bold">{item.qty}</td>
-                      <td className="p-3 text-right font-mono">PKR {(item.retail_price || 0).toFixed(2)}</td>
-                      <td className="p-3 text-right font-bold font-mono text-blue-600">
-                        PKR {((item.retail_price || 0) * item.qty).toFixed(2)}
-                      </td>
-                      <td className="p-3 text-slate-600 dark:text-slate-300">
-                        {isViewMode ? (
-                          item.instructions || "-"
-                        ) : (
-                          <Input
-                            value={item.instructions || ""}
-                            onChange={(e) => handleEditItem(item.id, "instructions", e.target.value)}
-                            placeholder="e.g. After meals"
-                            className="h-7 text-xs"
-                          />
-                        )}
-                      </td>
-                      {!isViewMode && (
-                        <td className="p-3 text-center">
-                          <button
-                            onClick={() => handleRemoveItem(item.id)}
-                            className="text-slate-400 hover:text-red-500"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </td>
-                      )}
+              <div className="overflow-x-auto w-full">
+                <table className="w-full text-xs text-left min-w-[620px]">
+                  <thead className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold border-b">
+                    <tr>
+                      <th className="p-3 w-10">#</th>
+                      <th className="p-3">Medicine</th>
+                      <th className="p-3 text-center">Dosage</th>
+                      <th className="p-3 text-center w-20">Qty</th>
+                      <th className="p-3 text-right">Price</th>
+                      <th className="p-3 text-right">Total</th>
+                      <th className="p-3">Instructions</th>
+                      {!isViewMode && <th className="p-3 text-center w-12">Action</th>}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    {prescription.map((item, idx) => (
+                      <tr key={item.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/50">
+                        <td className="p-3 font-mono text-slate-400">{idx + 1}</td>
+                        <td className="p-3 font-bold text-slate-900 dark:text-white">{item.name}</td>
+                        <td className="p-3 text-center">
+                          {isViewMode ? (
+                            item.dosage || "-"
+                          ) : (
+                            <Input
+                              value={item.dosage || ""}
+                              onChange={(e) => handleEditItem(item.id, "dosage", e.target.value)}
+                              placeholder="e.g. 1-0-1"
+                              className="h-7 text-xs text-center w-24 mx-auto"
+                            />
+                          )}
+                        </td>
+                        <td className="p-3 text-center font-bold">{item.qty}</td>
+                        <td className="p-3 text-right font-mono">PKR {(item.retail_price || 0).toFixed(2)}</td>
+                        <td className="p-3 text-right font-bold font-mono text-blue-600">
+                          PKR {((item.retail_price || 0) * item.qty).toFixed(2)}
+                        </td>
+                        <td className="p-3 text-slate-600 dark:text-slate-300">
+                          {isViewMode ? (
+                            item.instructions || "-"
+                          ) : (
+                            <Input
+                              value={item.instructions || ""}
+                              onChange={(e) => handleEditItem(item.id, "instructions", e.target.value)}
+                              placeholder="e.g. After meals"
+                              className="h-7 text-xs"
+                            />
+                          )}
+                        </td>
+                        {!isViewMode && (
+                          <td className="p-3 text-center">
+                            <button
+                              onClick={() => handleRemoveItem(item.id)}
+                              className="text-slate-400 hover:text-red-500"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </CardContent>
         </Card>
 
         {/* Prescription Actions */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-          <Button variant="outline" onClick={() => navigate("/")} className="gap-2 text-xs">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <Button variant="outline" onClick={() => navigate("/")} className="gap-2 text-xs w-full sm:w-auto">
             <ArrowLeft className="h-3.5 w-3.5" /> Return to Lab
           </Button>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {!isViewMode && (
-              <Button onClick={handleSaveToFirebase} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs">
+              <Button onClick={handleSaveToFirebase} className="gap-2 bg-blue-600 hover:bg-blue-700 text-white text-xs flex-1 sm:flex-none">
                 Save Prescription
               </Button>
             )}
             <Button
               variant="outline"
               onClick={() => handleDownloadPDF(false)}
-              className="gap-1.5 text-xs border-slate-300"
+              className="gap-1.5 text-xs border-slate-300 flex-1 sm:flex-none"
             >
               <Download className="h-3.5 w-3.5" /> PDF (Clean)
             </Button>
             <Button
               onClick={() => handleDownloadPDF(true)}
-              className="gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs"
+              className="gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs flex-1 sm:flex-none"
             >
-              <Download className="h-3.5 w-3.5" /> PDF (With Header Banner)
+              <Download className="h-3.5 w-3.5" /> PDF (With Header)
             </Button>
           </div>
         </div>

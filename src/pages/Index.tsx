@@ -36,10 +36,11 @@ import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { TestTemplate, DynamicReportRecord } from "@/types/dynamic-test";
 import { getTestTemplates, getCanvasTemplate } from "@/lib/testStorage";
-import { downloadReportAsPdf } from "@/lib/dynamicPdfGenerator";
+import { downloadReportAsPdf, printReportAsPdf } from "@/lib/dynamicPdfGenerator";
 import { db, auth } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
+import { Printer } from "lucide-react";
 
 type Step = "patient" | "select-tests" | "fill-results" | "preview";
 
@@ -75,6 +76,7 @@ export default function Index() {
   // PDF Download customizer setting (User requirement)
   const [showOnlyPatientName, setShowOnlyPatientName] = useState(false);
   const [isSavingToFirebase, setIsSavingToFirebase] = useState(false);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   useEffect(() => {
     loadTests();
@@ -159,6 +161,29 @@ export default function Index() {
     }
   };
 
+  // Direct Print PDF Handler
+  const handlePrintPdf = async () => {
+    setIsPrinting(true);
+    try {
+      const template = await getCanvasTemplate(selectedTestIds[0] || "all");
+      await printReportAsPdf({
+        report: compiledReport,
+        tests: selectedTestObjects,
+        template,
+        showOnlyPatientName,
+      });
+      toast({
+        title: "Print Preview Ready",
+        description: "Opening system print dialog...",
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Print failed";
+      toast({ title: "Print Error", description: msg, variant: "destructive" });
+    } finally {
+      setIsPrinting(false);
+    }
+  };
+
   // Save to Firebase
   const handleSaveToFirebase = async () => {
     setIsSavingToFirebase(true);
@@ -200,8 +225,27 @@ export default function Index() {
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         
         {/* Stepper Navigation */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between max-w-2xl mx-auto relative">
+        <div className="mb-6 sm:mb-8">
+          {/* Mobile Stepper Header (< sm) */}
+          <div className="sm:hidden flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="h-6 w-6 rounded-full bg-blue-600 text-white text-xs font-bold flex items-center justify-center">
+                {currentStep === "patient" ? 1 : currentStep === "select-tests" ? 2 : currentStep === "fill-results" ? 3 : 4}
+              </span>
+              <span className="font-bold text-xs text-slate-800 dark:text-slate-200">
+                {currentStep === "patient" && "Step 1: Patient Information"}
+                {currentStep === "select-tests" && `Step 2: Select Tests (${selectedTestIds.length})`}
+                {currentStep === "fill-results" && "Step 3: Enter Findings"}
+                {currentStep === "preview" && "Step 4: Verify & Export"}
+              </span>
+            </div>
+            <span className="text-[11px] font-mono font-semibold text-blue-600">
+              {currentStep === "patient" ? "25%" : currentStep === "select-tests" ? "50%" : currentStep === "fill-results" ? "75%" : "100%"}
+            </span>
+          </div>
+
+          {/* Desktop/Tablet Stepper (>= sm) */}
+          <div className="hidden sm:flex items-center justify-between max-w-2xl mx-auto relative">
             <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 z-0" />
             
             {[
@@ -209,7 +253,7 @@ export default function Index() {
               { id: "select-tests", label: "Select Tests", icon: FlaskConical },
               { id: "fill-results", label: "Enter Results", icon: Activity },
               { id: "preview", label: "Verify & Export", icon: FileCheck },
-            ].map((st, i) => {
+            ].map((st) => {
               const active = currentStep === st.id;
               const completed = 
                 (st.id === "patient" && currentStep !== "patient") ||
@@ -581,6 +625,14 @@ export default function Index() {
                     <Save className="h-3.5 w-3.5" /> Save Record
                   </Button>
                   <Button
+                    onClick={handlePrintPdf}
+                    disabled={isPrinting}
+                    variant="outline"
+                    className="gap-1.5 text-xs border-blue-200 text-blue-700 hover:bg-blue-50 dark:border-blue-800 dark:text-blue-300 font-semibold"
+                  >
+                    <Printer className="h-3.5 w-3.5" /> Print
+                  </Button>
+                  <Button
                     onClick={handleDownloadPdf}
                     className="gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20"
                     title={`Download file named ${patient.name.trim().replace(/\s+/g, "_")}.pdf`}
@@ -592,100 +644,118 @@ export default function Index() {
             </Card>
 
             {/* Document Preview Presentation */}
-            <Card className="shadow-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
-              <CardHeader className="py-6 text-center border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
-                <h1 className="text-2xl font-black text-blue-900 dark:text-blue-400 tracking-wide">
-                  SMMC LABORATORY REPORT
-                </h1>
-                <p className="text-xs text-slate-500 font-semibold">Accredited Clinical Pathology & Diagnostic Services</p>
-                <Badge variant="outline" className="mx-auto mt-2 font-mono text-xs border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-300 bg-white dark:bg-slate-900">
-                  {reportId}
-                </Badge>
-              </CardHeader>
+            <Card className="shadow-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden relative">
+              
+              {/* Watermark Overlay in On-screen Card (Matches Canvas Designer & Printed PDF) */}
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0"
+                style={{ opacity: 0.12 }}
+              >
+                <img src="/logo.png" alt="watermark" className="w-[120mm] h-[120mm] max-w-[80vw] object-contain" />
+              </div>
 
-              <CardContent className="p-6 space-y-6">
-                {/* Patient Information Section Preview */}
-                <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/60">
-                  {showOnlyPatientName ? (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-bold text-slate-500">Patient Name:</span>
-                        <span className="text-base font-extrabold text-blue-700 dark:text-blue-400">{patient.name}</span>
-                      </div>
-                      <Badge className="bg-blue-600 text-white text-[10px] font-semibold">
-                        Name-Only Mode Active
-                      </Badge>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 text-xs">
-                      <div>
-                        <span className="font-bold text-slate-500">Patient: </span>
-                        <span className="font-bold text-slate-900 dark:text-white">
-                          {patient.name} {patient.relation ? `(${patient.relation})` : ""}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-500">Referring Doctor: </span>
-                        <span>{patient.referringDoctor || "-"}</span>
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-500">Age / Gender: </span>
-                        <span>{patient.age || "-"} / {patient.sex}</span>
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-500">Sample ID: </span>
-                        <span className="font-mono text-blue-600">{patient.sampleId}</span>
-                      </div>
-                      <div>
-                        <span className="font-bold text-slate-500">Collection Date: </span>
-                        <span>{format(new Date(patient.collectionDateTime), "dd-MMM-yyyy HH:mm")}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <div className="relative z-10">
+                <CardHeader className="py-6 text-center border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80">
+                  <img
+                    src="/header.png"
+                    alt="Header Banner"
+                    className="w-full h-auto max-h-[30mm] object-contain mx-auto mb-2"
+                    onError={(e) => { (e.target as HTMLElement).style.display = "none"; }}
+                  />
+                  <h1 className="text-xl sm:text-2xl font-black text-blue-900 dark:text-blue-400 tracking-wide">
+                    SMMC LABORATORY REPORT
+                  </h1>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">ISO 15189 Certified Diagnostic Center</p>
+                  <Badge variant="outline" className="mx-auto mt-2 font-mono text-xs border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950">
+                    {reportId}
+                  </Badge>
+                </CardHeader>
 
-                {/* Test Results Display */}
-                {selectedTestObjects.map((test) => {
-                  const testValues = testResults[test.id] || {};
-                  return (
-                    <div key={test.id} className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xs">
-                      <div className="bg-blue-800 text-white px-4 py-2.5 text-xs font-bold flex justify-between">
-                        <span>{test.name.toUpperCase()}</span>
-                        <span className="opacity-90 font-normal">{test.method}</span>
+                <CardContent className="p-4 sm:p-6 space-y-6">
+                  {/* Patient Information Section Preview */}
+                  <div className="p-4 rounded-xl border border-blue-200/80 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-950/60">
+                    {showOnlyPatientName ? (
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xs font-bold text-slate-500">Patient Name:</span>
+                          <span className="text-base font-extrabold text-blue-700 dark:text-blue-400">{patient.name}</span>
+                        </div>
+                        <Badge className="bg-blue-600 text-white text-[10px] font-semibold">
+                          Name-Only Mode Active
+                        </Badge>
                       </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6 text-xs">
+                        <div>
+                          <span className="font-bold text-slate-500">Patient: </span>
+                          <span className="font-bold text-slate-900 dark:text-white">
+                            {patient.name} {patient.relation ? `(${patient.relation})` : ""}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-500">Referring Doctor: </span>
+                          <span>{patient.referringDoctor || "-"}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-500">Age / Gender: </span>
+                          <span>{patient.age || "-"} / {patient.sex}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-500">Sample ID: </span>
+                          <span className="font-mono text-blue-600">{patient.sampleId}</span>
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-500">Collection Date: </span>
+                          <span>{format(new Date(patient.collectionDateTime), "dd-MMM-yyyy HH:mm")}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
-                      <table className="w-full text-xs text-left">
-                        <thead className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold border-b border-slate-200 dark:border-slate-700">
-                          <tr>
-                            <th className="p-3">Parameter</th>
-                            <th className="p-3 text-center">Observed Result</th>
-                            <th className="p-3 text-center">Unit</th>
-                            <th className="p-3 text-center">Biological Reference Range</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                          {test.fields.map((f, i) => {
-                            const val = testValues[f.key];
-                            const display = val !== undefined && val !== "" ? String(val) : "-";
-                            const isAbnormal = f.options?.find((o) => o.value === display)?.isAbnormal || 
-                              display === "Positive" || display === "Reactive";
+                  {/* Test Results Display */}
+                  {selectedTestObjects.map((test) => {
+                    const testValues = testResults[test.id] || {};
+                    return (
+                      <div key={test.id} className="rounded-xl border border-blue-200/80 dark:border-slate-800 overflow-hidden shadow-xs">
+                        <div className="bg-blue-700 text-white px-4 py-2.5 text-xs font-bold flex justify-between">
+                          <span>{test.name.toUpperCase()}</span>
+                          <span className="opacity-90 font-normal">{test.method}</span>
+                        </div>
 
-                            return (
-                              <tr key={f.id} className={i % 2 === 0 ? "bg-white dark:bg-slate-900" : "bg-slate-50/50 dark:bg-slate-950/30"}>
-                                <td className="p-3 font-semibold text-slate-800 dark:text-slate-200">{f.label}</td>
-                                <td className={`p-3 text-center font-bold ${isAbnormal ? "text-red-600" : "text-blue-600 dark:text-blue-400"}`}>
-                                  {display}
-                                </td>
-                                <td className="p-3 text-center text-slate-500 font-mono">{f.unit || "-"}</td>
-                                <td className="p-3 text-center text-slate-500">{f.referenceRange || "-"}</td>
+                        <div className="overflow-x-auto w-full">
+                          <table className="w-full text-xs text-left min-w-[500px]">
+                            <thead className="bg-blue-100/70 dark:bg-blue-950/80 text-blue-900 dark:text-blue-200 font-bold border-b border-blue-200">
+                              <tr>
+                                <th className="p-3 w-5/12">Parameter</th>
+                                <th className="p-3 text-center w-3/12">Observed Result</th>
+                                <th className="p-3 text-center w-2/12">Unit</th>
+                                <th className="p-3 text-center w-2/12">Biological Reference Range</th>
                               </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  );
-                })}
+                            </thead>
+                            <tbody className="divide-y divide-blue-50 dark:divide-slate-800">
+                              {test.fields.map((f, i) => {
+                                const val = testValues[f.key];
+                                const display = val !== undefined && val !== "" ? String(val) : "-";
+                                const isAbnormal = f.options?.find((o) => o.value === display)?.isAbnormal || 
+                                  display === "Positive" || display === "Reactive";
+
+                                return (
+                                  <tr key={f.id} className={i % 2 === 0 ? "bg-white/90 dark:bg-slate-900/90" : "bg-blue-50/30 dark:bg-slate-950/50"}>
+                                    <td className="p-3 font-semibold text-slate-800 dark:text-slate-200">{f.label}</td>
+                                    <td className={`p-3 text-center font-bold ${isAbnormal ? "text-red-600" : "text-blue-600 dark:text-blue-400"}`}>
+                                      {display}
+                                    </td>
+                                    <td className="p-3 text-center text-slate-500 font-mono">{f.unit || "-"}</td>
+                                    <td className="p-3 text-center text-slate-500">{f.referenceRange || "-"}</td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    );
+                  })}
 
                 {/* Doctor Notes Box */}
                 <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 dark:bg-slate-950/40 dark:border-slate-800 space-y-2">
@@ -712,9 +782,10 @@ export default function Index() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
-          </div>
-        )}
+            </div>
+          </Card>
+        </div>
+      )}
       </div>
     </AppLayout>
   );

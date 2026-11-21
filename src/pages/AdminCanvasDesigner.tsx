@@ -18,6 +18,7 @@ import {
   LayoutTemplate,
   Save,
   Download,
+  Printer,
   Eye,
   EyeOff,
   MoveUp,
@@ -30,7 +31,7 @@ import {
 } from "lucide-react";
 import { TestTemplate, CanvasTemplate } from "@/types/dynamic-test";
 import { getTestTemplates, getCanvasTemplate, saveCanvasTemplate } from "@/lib/testStorage";
-import { downloadReportAsPdf } from "@/lib/dynamicPdfGenerator";
+import { downloadReportAsPdf, printReportAsPdf } from "@/lib/dynamicPdfGenerator";
 import { useToast } from "@/hooks/use-toast";
 
 export default function AdminCanvasDesigner() {
@@ -41,6 +42,7 @@ export default function AdminCanvasDesigner() {
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [zoomLevel, setZoomLevel] = useState<number>(85);
   const [isSaving, setIsSaving] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"sheet" | "settings">("sheet");
 
   // Drag and Drop state
   const [draggedBlockIndex, setDraggedBlockIndex] = useState<number | null>(null);
@@ -212,6 +214,53 @@ export default function AdminCanvasDesigner() {
     });
   };
 
+  // Direct test print preview from designer
+  const handleTestPrint = async () => {
+    if (!template) return;
+    const currentTest = tests.find((t) => t.id === selectedTestId);
+    if (!currentTest) return;
+
+    const mockReport = {
+      reportId: `REP-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-TEST`,
+      patient: {
+        name: "Muhammad Ali Khan",
+        relation: "S/O Tariq Khan",
+        age: 34,
+        sex: "Male" as const,
+        referringDoctor: "Dr. Aamir",
+        sampleId: "S-882194",
+        collectionDateTime: new Date().toISOString(),
+      },
+      selectedTestIds: [currentTest.id],
+      results: {
+        [currentTest.id]: currentTest.fields.reduce((acc, f) => {
+          acc[f.key] = f.options?.[0]?.value || (f.type === "number" ? 14 : "Normal");
+          return acc;
+        }, {} as Record<string, string | number | boolean>),
+      },
+      notes: "Sample verified and approved under certified internal quality control.",
+      technicianName: "Staff Technician",
+      verifiedBy: "Dr. Aamir (Consultant Pathologist)",
+      verificationDate: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+    };
+
+    const patientBlock = template.blocks.find((b) => b.type === "patient-info");
+    const showOnlyPatientName = patientBlock?.config.showOnlyPatientName ?? false;
+
+    await printReportAsPdf({
+      report: mockReport,
+      tests: [currentTest],
+      template,
+      showOnlyPatientName,
+    });
+
+    toast({
+      title: "Print Preview Initiated",
+      description: "Direct browser print preview opened with watermark and Royal Blue branding.",
+    });
+  };
+
   const currentTest = tests.find((t) => t.id === selectedTestId);
   const patientBlockConfig = template?.blocks.find((b) => b.type === "patient-info")?.config;
 
@@ -230,13 +279,13 @@ export default function AdminCanvasDesigner() {
               </h1>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-              Interactive drag & drop canvas template builder. Rearrange components, customize green & white print styles, and preview in real-time.
+              Interactive drag & drop canvas template builder. Rearrange components, customize Royal Blue & White print styles, and preview in real-time.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <Select value={selectedTestId} onValueChange={handleSelectTest}>
-              <SelectTrigger className="w-56 h-9 text-xs border-blue-200 dark:border-blue-800">
+              <SelectTrigger className="w-full sm:w-52 h-9 text-xs border-blue-200 dark:border-blue-800">
                 <SelectValue placeholder="Choose test layout..." />
               </SelectTrigger>
               <SelectContent>
@@ -247,6 +296,15 @@ export default function AdminCanvasDesigner() {
                 ))}
               </SelectContent>
             </Select>
+
+            <Button
+              variant="outline"
+              onClick={handleTestPrint}
+              className="gap-1.5 text-xs h-9 border-blue-300 dark:border-blue-800 text-blue-800 dark:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950"
+            >
+              <Printer className="h-4 w-4" />
+              Print Test PDF
+            </Button>
 
             <Button
               variant="outline"
@@ -268,6 +326,32 @@ export default function AdminCanvasDesigner() {
           </div>
         </div>
 
+        {/* Mobile View Switcher (lg:hidden) */}
+        <div className="lg:hidden flex rounded-xl bg-blue-50/80 dark:bg-blue-950/50 p-1 border border-blue-200 dark:border-blue-900 mt-4">
+          <button
+            type="button"
+            onClick={() => setMobileTab("sheet")}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+              mobileTab === "sheet"
+                ? "bg-blue-600 text-white shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-blue-700"
+            }`}
+          >
+            A4 Sheet Preview
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobileTab("settings")}
+            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+              mobileTab === "settings"
+                ? "bg-blue-600 text-white shadow-xs"
+                : "text-slate-600 dark:text-slate-400 hover:text-blue-700"
+            }`}
+          >
+            Components & Settings ({template?.blocks.length || 0})
+          </button>
+        </div>
+
         {/* Drag Helper Notice */}
         <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl flex items-center justify-between text-xs text-blue-900 dark:text-blue-200">
           <div className="flex items-center gap-2">
@@ -285,7 +369,7 @@ export default function AdminCanvasDesigner() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
           
           {/* Left Inspector (4 cols) */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className={`lg:col-span-4 space-y-6 ${mobileTab === "settings" ? "block" : "hidden lg:block"}`}>
             
             {/* Draggable Block Hierarchy List */}
             <Card className="shadow-xs border-blue-100 dark:border-blue-900/50">
@@ -541,24 +625,24 @@ export default function AdminCanvasDesigner() {
           </div>
 
           {/* Right Area: Interactive Simulated A4 Canvas Sheet (8 cols) */}
-          <div className="lg:col-span-8 flex flex-col items-center">
+          <div className={`lg:col-span-8 flex flex-col items-center w-full min-w-0 ${mobileTab === "sheet" ? "block" : "hidden lg:block"}`}>
             
             {/* Canvas Toolbar */}
-            <div className="w-full flex items-center justify-between pb-3 text-xs text-slate-500">
+            <div className="w-full flex flex-wrap items-center justify-between gap-2 pb-3 text-xs text-slate-500">
               <span className="font-semibold text-blue-800 dark:text-blue-300 flex items-center gap-1.5">
                 <Sparkles className="h-3.5 w-3.5 text-blue-600" />
                 Live Royal Blue A4 Sheet Preview
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <span>Zoom:</span>
-                {[75, 85, 100].map((z) => (
+                {[50, 65, 75, 85, 100].map((z) => (
                   <button
                     key={z}
                     onClick={() => setZoomLevel(z)}
-                    className={`px-2 py-0.5 rounded text-xs transition ${
+                    className={`px-2 py-0.5 rounded text-xs transition font-semibold ${
                       zoomLevel === z
-                        ? "bg-blue-600 text-white font-medium"
-                        : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                        ? "bg-blue-600 text-white shadow-xs"
+                        : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-300"
                     }`}
                   >
                     {z}%
@@ -567,18 +651,20 @@ export default function AdminCanvasDesigner() {
               </div>
             </div>
 
-            {/* Simulated Paper Container (Royal Blue Styled) */}
-            <div
-              style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: "top center" }}
-              className="w-[210mm] min-h-[297mm] bg-white text-slate-900 p-[12mm] rounded-sm shadow-2xl border-2 border-blue-500 transition-transform duration-150 flex flex-col justify-between relative overflow-hidden"
-            >
-              {/* Watermark Overlay in Canvas */}
+            {/* Scrollable Container for Mobile Responsiveness */}
+            <div className="w-full overflow-x-auto py-2 flex justify-center items-start">
+              {/* Simulated Paper Container (Royal Blue Styled) */}
               <div
-                className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                style={{ opacity: 0.05 }}
+                style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: "top center" }}
+                className="w-[210mm] min-h-[297mm] bg-white text-slate-900 p-[12mm] rounded-sm shadow-2xl border-2 border-blue-500 transition-transform duration-150 flex flex-col justify-between relative overflow-hidden shrink-0"
               >
-                <img src="/logo.png" alt="watermark" className="w-[130mm] h-[130mm] object-contain" />
-              </div>
+                {/* Watermark Overlay in Canvas */}
+                <div
+                  className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                  style={{ opacity: 0.12 }}
+                >
+                  <img src="/logo.png" alt="watermark" className="w-[130mm] h-[130mm] object-contain" />
+                </div>
 
               {/* Dynamic Canvas Blocks with Direct Drag & Drop on the Sheet */}
               <div className="space-y-4 relative z-10">
@@ -758,6 +844,7 @@ export default function AdminCanvasDesigner() {
               <div className="text-[9px] text-slate-400 text-center pt-2">
                 SMMC Clinical Diagnostic Laboratory Management System
               </div>
+            </div>
             </div>
           </div>
         </div>
