@@ -21,6 +21,28 @@ interface JsPDFExtended extends jsPDF {
 const imageCache: Record<string, string> = {};
 
 /**
+ * Strict ASCII sanitizer for standard jsPDF fonts (Helvetica, Times, Courier).
+ * Standard PDF fonts only support WinAnsiEncoding (0x20 - 0x7E).
+ * Multi-byte Unicode characters (such as bullets, arrows, checkmarks, en-dashes, and micro signs)
+ * corrupt the font byte stream and produce glitch artifacts (e.g. %I, %?, %|).
+ * This function converts them to clean ASCII so the report is 100% glitch-free across all devices and printers.
+ */
+function cleanAscii(val: unknown): string {
+  if (val === null || val === undefined) return "";
+  return String(val)
+    .replace(/[●•◆■]/g, "")
+    .replace(/[▶►]/g, "")
+    .replace(/[✓✔]/g, "")
+    .replace(/[–—]/g, "-")
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .replace(/µ/g, "u")
+    .replace(/[^\x20-\x7E\r\n\t]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * Bulletproof image loader: handles absolute URLs, relative URLs, fetch blob conversion,
  * and falls back to HTML Canvas Image rendering.
  */
@@ -130,7 +152,7 @@ function drawPageDecorations(doc: jsPDF, extDoc: JsPDFExtended, logoBase64: stri
 }
 
 /**
- * Generates an extraordinarily premium clinical laboratory report PDF.
+ * Generates an extraordinarily premium clinical laboratory report PDF with 100% glitch-free ASCII text.
  */
 export async function generateDynamicReportPDF({
   report,
@@ -178,7 +200,7 @@ export async function generateDynamicReportPDF({
     doc.setTextColor(71, 85, 105);
     doc.text("Department of Pathology & Clinical Laboratory Services", 36, yPos + 12);
     doc.setTextColor(37, 99, 235);
-    doc.text("ISO 15189:2022 Certified • Quality Assured Diagnostic Center", 36, yPos + 16.5);
+    doc.text("ISO 15189:2022 Certified | Quality Assured Diagnostic Center", 36, yPos + 16.5);
 
     yPos += 22;
   }
@@ -209,7 +231,7 @@ export async function generateDynamicReportPDF({
   doc.setTextColor(29, 78, 216); // Royal Blue
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "bold");
-  doc.text(`REPORT NO: ${report.reportId}`, pageWidth - 43, yPos + 4.7, { align: "center" });
+  doc.text(`REPORT NO: ${cleanAscii(report.reportId)}`, pageWidth - 43, yPos + 4.7, { align: "center" });
 
   yPos += 11;
 
@@ -238,7 +260,7 @@ export async function generateDynamicReportPDF({
     doc.setTextColor(15, 39, 74);
     doc.setFontSize(11.5);
     doc.setFont("helvetica", "bold");
-    doc.text(report.patient.name.toUpperCase(), 48, yPos + 8.2);
+    doc.text(cleanAscii(report.patient.name).toUpperCase(), 48, yPos + 8.2);
 
     // Right Confidential Badge
     doc.setFillColor(239, 246, 255);
@@ -285,10 +307,11 @@ export async function generateDynamicReportPDF({
     doc.setFontSize(8.5);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(15, 39, 74); // Deep Navy
-    doc.text(`${report.patient.name} ${report.patient.relation ? `(${report.patient.relation})` : ""}`, c1X, rowY);
+    const patRelation = report.patient.relation ? `(${cleanAscii(report.patient.relation)})` : "";
+    doc.text(`${cleanAscii(report.patient.name)} ${patRelation}`, c1X, rowY);
 
     doc.setFontSize(8);
-    doc.text(report.patient.referringDoctor || "Self / Consultant", c2X, rowY);
+    doc.text(cleanAscii(report.patient.referringDoctor || "Self / Consultant"), c2X, rowY);
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
     doc.text(formatDateTime(report.patient.collectionDateTime), c3X, rowY);
@@ -306,11 +329,11 @@ export async function generateDynamicReportPDF({
     doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(15, 39, 74);
-    doc.text(`${report.patient.age ?? "-"} Y  /  ${report.patient.sex ?? "-"}`, c1X, rowY);
+    doc.text(`${cleanAscii(report.patient.age) || "-"} Y / ${cleanAscii(report.patient.sex) || "-"}`, c1X, rowY);
 
     doc.setTextColor(37, 99, 235); // Blue-600
     doc.setFont("helvetica", "bold");
-    doc.text(report.patient.sampleId, c2X, rowY);
+    doc.text(cleanAscii(report.patient.sampleId), c2X, rowY);
 
     doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
@@ -336,18 +359,18 @@ export async function generateDynamicReportPDF({
 
       if (secFields.length === 0) continue;
 
-      // Section divider row (e.g. Physical Examination, Chemical Examination, Microscopic Examination)
+      // Section divider row (e.g. General Screening, Species Identification, Physical Examination)
       if (sec.name) {
         tableRows.push([
           {
-            content: `▶  ${sec.name.toUpperCase()}`,
+            content: cleanAscii(sec.name).toUpperCase(),
             colSpan: 4,
             styles: {
               fontStyle: "bold",
               fontSize: 7.5,
               fillColor: [240, 247, 255], // Glacier Blue #f0f7ff
               textColor: [29, 78, 216],   // Royal Blue #1d4ed8
-              cellPadding: 1.8,
+              cellPadding: 2,
             },
           },
         ]);
@@ -355,12 +378,13 @@ export async function generateDynamicReportPDF({
 
       for (const field of secFields) {
         const val = testResults[field.key];
-        const displayVal = val !== undefined && val !== null && val !== "" ? String(val) : "-";
-        const unit = field.unit || "-";
-        const refRange = field.referenceRange || "-";
+        const rawDisplay = val !== undefined && val !== null && val !== "" ? String(val) : "-";
+        const displayVal = cleanAscii(rawDisplay) || "-";
+        const unit = cleanAscii(field.unit) || "-";
+        const refRange = cleanAscii(field.referenceRange) || "-";
 
         tableRows.push([
-          field.label,
+          cleanAscii(field.label),
           displayVal,
           unit,
           refRange,
@@ -368,7 +392,7 @@ export async function generateDynamicReportPDF({
       }
     }
 
-    // Check if new page is needed before table title banner
+    // Check if new page is needed before test banner
     if (yPos > pageHeight - 45) {
       doc.addPage();
       drawPageDecorations(doc, extDoc, logoBase64);
@@ -377,23 +401,27 @@ export async function generateDynamicReportPDF({
 
     // Elegant Test Header Banner
     doc.setFillColor(15, 39, 74); // Deep Navy #0f274a
-    doc.roundedRect(12, yPos, 186, 6.5, 1, 1, "F");
+    doc.roundedRect(12, yPos, 186, 6.8, 1, 1, "F");
+
+    // Crisp Vector Accent Box (immune to Unicode font encoding issues)
+    doc.setFillColor(37, 99, 235);
+    doc.roundedRect(15, yPos + 2, 2.5, 2.8, 0.5, 0.5, "F");
 
     // Title left
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(8.5);
     doc.setFont("helvetica", "bold");
-    doc.text(`●  ${test.name.toUpperCase()}`, 16, yPos + 4.5);
+    doc.text(cleanAscii(test.name).toUpperCase(), 20, yPos + 4.8);
 
     // Method right
     if (test.method) {
       doc.setTextColor(147, 197, 253); // Light Blue-300
       doc.setFontSize(7.5);
       doc.setFont("helvetica", "normal");
-      doc.text(`Method: ${test.method}`, pageWidth - 16, yPos + 4.5, { align: "right" });
+      doc.text(`Method: ${cleanAscii(test.method)}`, pageWidth - 16, yPos + 4.8, { align: "right" });
     }
 
-    yPos += 6.5;
+    yPos += 6.8;
 
     autoTable(doc, {
       startY: yPos,
@@ -435,8 +463,8 @@ export async function generateDynamicReportPDF({
             cellText === "Reactive" || 
             cellText.includes("1+") || 
             cellText.includes("2+") || 
-            cellText.includes("3+") ||
-            cellText.includes("4+") ||
+            cellText.includes("3+") || 
+            cellText.includes("4+") || 
             cellText === "Present"
           ) {
             data.cell.styles.textColor = [220, 38, 38]; // Crimson Red #dc2626
@@ -459,7 +487,7 @@ export async function generateDynamicReportPDF({
 
   // 4. Clinical Notes / Pathologist Interpretation Box
   // USER REQUIREMENT: Strictly removed from default! Only render if notes are explicitly provided!
-  const notesText = report.notes ? report.notes.trim() : "";
+  const notesText = report.notes ? cleanAscii(report.notes) : "";
   if (notesText && notesText.length > 0) {
     if (yPos > pageHeight - 50) {
       doc.addPage();
@@ -505,12 +533,12 @@ export async function generateDynamicReportPDF({
   doc.setFontSize(7);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(71, 85, 105);
-  doc.text(report.technicianName || "Staff Technologist", 16, sigY + 8);
+  doc.text(cleanAscii(report.technicianName || "Staff Technologist"), 16, sigY + 8);
   doc.setFontSize(6.5);
   doc.setTextColor(100, 116, 139);
-  doc.text("B.Sc. MLT • Quality Control Verified", 16, sigY + 11.5);
+  doc.text("B.Sc. MLT | Quality Control Verified", 16, sigY + 11.5);
 
-  // Center: Official Digital Verification Shield Badge
+  // Center: Official Digital Verification Shield Badge (Pure ASCII)
   doc.setFillColor(239, 246, 255);
   doc.setDrawColor(191, 219, 254);
   doc.roundedRect(pageWidth / 2 - 26, sigY - 2, 52, 9.5, 1.5, 1.5, "FD");
@@ -518,7 +546,7 @@ export async function generateDynamicReportPDF({
   doc.setFontSize(7.5);
   doc.setFont("helvetica", "bold");
   doc.setTextColor(29, 78, 216);
-  doc.text("[ ✓ DIGITALLY VERIFIED ]", pageWidth / 2, sigY + 2.5, { align: "center" });
+  doc.text("[ DIGITALLY VERIFIED ]", pageWidth / 2, sigY + 2.5, { align: "center" });
 
   doc.setFontSize(6.5);
   doc.setFont("helvetica", "normal");
@@ -556,7 +584,7 @@ export async function generateDynamicReportPDF({
     doc.setFontSize(6.5);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 116, 139);
-    doc.text("SMMC Clinical Diagnostic Laboratory • Emergency & Routine Pathology Services", 12, pageHeight - 5.5);
+    doc.text("SMMC Clinical Diagnostic Laboratory | Emergency & Routine Pathology Services", 12, pageHeight - 5.5);
     doc.text("Computer-generated report. No physical signature required.", pageWidth / 2, pageHeight - 5.5, { align: "center" });
 
     doc.setFont("helvetica", "bold");
@@ -611,8 +639,8 @@ export async function printReportAsPdf(options: GeneratePdfOptions): Promise<voi
 function formatDateTime(dateStr?: string): string {
   if (!dateStr) return "-";
   try {
-    return format(new Date(dateStr), "dd-MMM-yyyy HH:mm");
+    return cleanAscii(format(new Date(dateStr), "dd-MMM-yyyy HH:mm"));
   } catch {
-    return dateStr;
+    return cleanAscii(dateStr);
   }
 }

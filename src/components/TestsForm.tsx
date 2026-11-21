@@ -113,7 +113,7 @@ export function TestsForm({ data, onChange }: TestsFormProps) {
 
                 {data.malarialParasites.result === "Positive" && (
                   <div>
-                    <Label className="text-sm font-medium">Parasite Density (parasites/µL)</Label>
+                    <Label className="text-sm font-medium">Parasite Density (parasites/uL)</Label>
                     <Input
                       type="number"
                       placeholder="e.g., 1200"

@@ -65,7 +65,7 @@ export const DEFAULT_TESTS: TestTemplate[] = [
         type: "number",
         section: "Species Identification",
         order: 4,
-        unit: "parasites/µL",
+        unit: "parasites/uL",
         referenceRange: "0",
         placeholder: "e.g. 1200",
       },
@@ -182,11 +182,11 @@ export const DEFAULT_TESTS: TestTemplate[] = [
     ],
     fields: [
       // 1. Physical Examination (Volume, Color, Appearance, Specific Gravity, Reaction pH)
-      { id: "u-vol", key: "volume", label: "Volume", type: "text", section: "Physical Examination", order: 1, unit: "ml", referenceRange: "800 – 2000 ml / 24hr", placeholder: "e.g. 50" },
+      { id: "u-vol", key: "volume", label: "Volume", type: "text", section: "Physical Examination", order: 1, unit: "ml", referenceRange: "800 - 2000 ml / 24hr", placeholder: "e.g. 50" },
       { id: "u-col", key: "color", label: "Color", type: "text", section: "Physical Examination", order: 2, unit: "-", referenceRange: "Pale Yellow - Yellow", placeholder: "e.g. Pale Yellow" },
       { id: "u-app", key: "appearance", label: "Appearance", type: "text", section: "Physical Examination", order: 3, unit: "-", referenceRange: "Clear", placeholder: "e.g. Clear / Hazy" },
-      { id: "u-spg", key: "specificGravity", label: "Specific Gravity", type: "text", section: "Physical Examination", order: 4, unit: "-", referenceRange: "1.005 – 1.025", placeholder: "e.g. 1.015" },
-      { id: "u-ph", key: "pH", label: "Reaction pH", type: "text", section: "Physical Examination", order: 5, unit: "-", referenceRange: "5.0 – 8.0", placeholder: "e.g. 6.0" },
+      { id: "u-spg", key: "specificGravity", label: "Specific Gravity", type: "text", section: "Physical Examination", order: 4, unit: "-", referenceRange: "1.005 - 1.025", placeholder: "e.g. 1.015" },
+      { id: "u-ph", key: "pH", label: "Reaction pH", type: "text", section: "Physical Examination", order: 5, unit: "-", referenceRange: "5.0 - 8.0", placeholder: "e.g. 6.0" },
 
       // 2. Chemical Examination (Protein, Glucose, Ketone Bodies, Urobilinogen, Bilirubin, Haemoglobin, Nitrite)
       { id: "u-pro", key: "protein", label: "Protein", type: "text", section: "Chemical Examination", order: 6, unit: "-", referenceRange: "Negative", placeholder: "Negative / Nil" },
@@ -198,10 +198,10 @@ export const DEFAULT_TESTS: TestTemplate[] = [
       { id: "u-nit", key: "nitrite", label: "Nitrite", type: "text", section: "Chemical Examination", order: 12, unit: "-", referenceRange: "Negative", placeholder: "Negative" },
 
       // 3. Microscopic Examination (RBCs, WBCs, Leukocytes, Epithelial Cells, Bacteria, Yeast, Casts, Crystals, Others)
-      { id: "u-rbc", key: "rbcs", label: "RBCs", type: "text", section: "Microscopic Examination", order: 13, unit: "/HPF", referenceRange: "0 – 2 /HPF", placeholder: "0 - 1" },
-      { id: "u-wbc", key: "wbcs", label: "WBCs", type: "text", section: "Microscopic Examination", order: 14, unit: "/HPF", referenceRange: "0 – 4 /HPF", placeholder: "1 - 2" },
-      { id: "u-leuk", key: "leukocytes", label: "Leukocytes", type: "text", section: "Microscopic Examination", order: 15, unit: "/HPF", referenceRange: "0 – 4 /HPF", placeholder: "0 - 2" },
-      { id: "u-epi", key: "epithelialCells", label: "Epithelial Cells", type: "text", section: "Microscopic Examination", order: 16, unit: "/HPF", referenceRange: "0 – 4 /HPF", placeholder: "Occasional" },
+      { id: "u-rbc", key: "rbcs", label: "RBCs", type: "text", section: "Microscopic Examination", order: 13, unit: "/HPF", referenceRange: "0 - 2 /HPF", placeholder: "0 - 1" },
+      { id: "u-wbc", key: "wbcs", label: "WBCs", type: "text", section: "Microscopic Examination", order: 14, unit: "/HPF", referenceRange: "0 - 4 /HPF", placeholder: "1 - 2" },
+      { id: "u-leuk", key: "leukocytes", label: "Leukocytes", type: "text", section: "Microscopic Examination", order: 15, unit: "/HPF", referenceRange: "0 - 4 /HPF", placeholder: "0 - 2" },
+      { id: "u-epi", key: "epithelialCells", label: "Epithelial Cells", type: "text", section: "Microscopic Examination", order: 16, unit: "/HPF", referenceRange: "0 - 4 /HPF", placeholder: "Occasional" },
       { id: "u-bac", key: "bacteria", label: "Bacteria", type: "text", section: "Microscopic Examination", order: 17, unit: "-", referenceRange: "Nil", placeholder: "Nil / Present" },
       { id: "u-yst", key: "yeast", label: "Yeast", type: "text", section: "Microscopic Examination", order: 18, unit: "-", referenceRange: "Nil", placeholder: "Nil" },
       { id: "u-cst", key: "casts", label: "Casts", type: "text", section: "Microscopic Examination", order: 19, unit: "/LPF", referenceRange: "Nil /LPF", placeholder: "Nil" },

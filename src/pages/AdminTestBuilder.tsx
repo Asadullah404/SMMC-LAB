@@ -43,8 +43,8 @@ import { useToast } from "@/hooks/use-toast";
 const COMMON_UNITS = [
   "mg/dL",
   "g/dL",
-  "µL",
-  "parasites/µL",
+  "uL",
+  "parasites/uL",
   "ml",
   "/HPF",
   "/LPF",
@@ -778,7 +778,7 @@ export default function AdminTestBuilder() {
                 <div>
                   <Label className="text-xs font-semibold">Unit of Measurement</Label>
                   <Input
-                    placeholder="e.g. mg/dL, parasites/µL, /HPF, ml"
+                    placeholder="e.g. mg/dL, parasites/uL, /HPF, ml"
                     value={editingField.unit || ""}
                     onChange={(e) => setEditingField({ ...editingField, unit: e.target.value })}
                     className="mt-1"
