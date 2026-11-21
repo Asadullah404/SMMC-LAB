@@ -240,10 +240,13 @@ export default function Reports() {
               {/* Background Watermark Logo (Matches Canvas Designer & Print PDF) */}
               <div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0"
-                style={{ opacity: 0.12 }}
+                style={{ opacity: 0.05 }}
               >
                 <img src="/logo.png" alt="watermark" className="w-[120mm] h-[120mm] max-w-[80vw] object-contain" />
               </div>
+
+              {/* Top Luxury Brand Strip */}
+              <div className="h-1 bg-gradient-to-r from-blue-900 via-blue-600 to-indigo-700 w-full" />
 
               <div className="relative z-10">
                 <CardHeader className="py-6 text-center border-b border-slate-100 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-950/80">
@@ -263,8 +266,8 @@ export default function Reports() {
                 </CardHeader>
 
                 <CardContent className="p-4 sm:p-6 space-y-6">
-                  {/* Patient Information Section */}
-                  <div className="p-4 rounded-xl border border-blue-200/80 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-950/60">
+                  {/* Patient Information Section (Luxury Bar) */}
+                  <div className="p-4 rounded-xl border border-blue-200/80 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-950/60 border-l-4 border-l-blue-600">
                     {showOnlyPatientName ? (
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
@@ -354,8 +357,8 @@ export default function Reports() {
                     );
                   })}
 
-                  {/* Doctor Notes */}
-                  {report.notes && (
+                  {/* Doctor Notes (Rendered only when notes are explicitly provided) */}
+                  {report.notes && report.notes.trim().length > 0 && (
                     <div className="p-4 rounded-xl border border-blue-200 bg-blue-50/60 dark:bg-slate-950/40 dark:border-slate-800 space-y-1">
                       <p className="text-xs font-bold text-blue-900 dark:text-blue-200">
                         Clinical Notes / Interpretation

@@ -191,7 +191,7 @@ export default function AdminCanvasDesigner() {
           return acc;
         }, {} as Record<string, string | number | boolean>),
       },
-      notes: "Sample verified and approved under certified internal quality control.",
+      notes: "",
       technicianName: "Staff Technician",
       verifiedBy: "Dr. Aamir (Consultant Pathologist)",
       verificationDate: new Date().toISOString(),
@@ -238,7 +238,7 @@ export default function AdminCanvasDesigner() {
           return acc;
         }, {} as Record<string, string | number | boolean>),
       },
-      notes: "Sample verified and approved under certified internal quality control.",
+      notes: "",
       technicianName: "Staff Technician",
       verifiedBy: "Dr. Aamir (Consultant Pathologist)",
       verificationDate: new Date().toISOString(),
@@ -658,10 +658,10 @@ export default function AdminCanvasDesigner() {
                 style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: "top center" }}
                 className="w-[210mm] min-h-[297mm] bg-white text-slate-900 p-[12mm] rounded-sm shadow-2xl border-2 border-blue-500 transition-transform duration-150 flex flex-col justify-between relative overflow-hidden shrink-0"
               >
-                {/* Watermark Overlay in Canvas */}
+                {/* Watermark Overlay in Canvas (Soft Luxury 0.05 Opacity) */}
                 <div
                   className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                  style={{ opacity: 0.12 }}
+                  style={{ opacity: 0.05 }}
                 >
                   <img src="/logo.png" alt="watermark" className="w-[130mm] h-[130mm] object-contain" />
                 </div>
@@ -806,14 +806,14 @@ export default function AdminCanvasDesigner() {
                         </div>
                       )}
 
-                      {/* 4. Notes Block */}
-                      {block.type === "doctor-notes" && (
+                      {/* 4. Notes Block (Optional - only when notes are present) */}
+                      {block.type === "doctor-notes" && Boolean(block.config.customText?.trim()) && (
                         <div className="rounded-md p-3 border border-blue-300 bg-blue-50/50 text-xs">
                           <p className="font-bold text-blue-900 text-[11px] mb-1">
                             {block.config.title || "Pathologist Notes"}:
                           </p>
                           <p className="text-[10px] text-blue-800">
-                            {block.config.customText || "All tests processed under strict internal quality control measures."}
+                            {block.config.customText}
                           </p>
                         </div>
                       )}

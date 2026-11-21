@@ -86,7 +86,8 @@ async function loadImageAsBase64(url: string): Promise<string | null> {
 }
 
 /**
- * Draws the outer double frame and the centered semi-transparent watermark logo.
+ * Draws the executive page background, brand accent bars, micro-hairline perimeter,
+ * and the delicate semi-transparent watermark logo.
  */
 function drawPageDecorations(doc: jsPDF, extDoc: JsPDFExtended, logoBase64: string | null) {
   const pageWidth = doc.internal.pageSize.getWidth();
@@ -96,23 +97,30 @@ function drawPageDecorations(doc: jsPDF, extDoc: JsPDFExtended, logoBase64: stri
   doc.setFillColor(255, 255, 255);
   doc.rect(0, 0, pageWidth, pageHeight, "F");
 
-  // Outer Royal Blue Border (matches canvas designer)
-  doc.setDrawColor(37, 99, 235); // Blue-600
-  doc.setLineWidth(0.6);
-  doc.rect(8, 8, pageWidth - 16, pageHeight - 16);
+  // Top Executive Navy & Sapphire Brand Accent Bars
+  doc.setFillColor(15, 39, 74); // Deep Executive Navy #0f274a
+  doc.rect(0, 0, pageWidth, 2.5, "F");
+  doc.setFillColor(37, 99, 235); // Vibrant Sapphire #2563eb
+  doc.rect(0, 2.5, pageWidth, 0.7, "F");
 
-  // Inner Soft Blue Hairline
-  doc.setDrawColor(219, 234, 254); // Blue-100
-  doc.setLineWidth(0.2);
-  doc.rect(10, 10, pageWidth - 20, pageHeight - 20);
+  // Bottom Executive Navy & Sapphire Accent Bars
+  doc.setFillColor(15, 39, 74);
+  doc.rect(0, pageHeight - 2.5, pageWidth, 2.5, "F");
+  doc.setFillColor(37, 99, 235);
+  doc.rect(0, pageHeight - 3.2, pageWidth, 0.7, "F");
 
-  // Watermark Logo: centered, visible 0.12 opacity so it prints and displays clearly
+  // Subtle Elegant Page Framing (Delicate Hairline - NOT harsh double borders)
+  doc.setDrawColor(226, 232, 240); // Slate-200
+  doc.setLineWidth(0.12);
+  doc.rect(9, 7, pageWidth - 18, pageHeight - 14);
+
+  // Watermark Logo: centered, elegant 0.05 opacity (authentic security watermark that never interferes with text)
   if (logoBase64) {
     try {
-      const logoSize = 130;
+      const logoSize = 120;
       const x = (pageWidth - logoSize) / 2;
       const y = (pageHeight - logoSize) / 2;
-      extDoc.setGState(new extDoc.GState({ opacity: 0.12 }));
+      extDoc.setGState(new extDoc.GState({ opacity: 0.05 }));
       doc.addImage(logoBase64, "PNG", x, y, logoSize, logoSize);
       extDoc.setGState(new extDoc.GState({ opacity: 1 }));
     } catch (err) {
@@ -122,7 +130,7 @@ function drawPageDecorations(doc: jsPDF, extDoc: JsPDFExtended, logoBase64: stri
 }
 
 /**
- * Generates an exact-match clinical laboratory report PDF in Royal Navy & Blue theme.
+ * Generates an extraordinarily premium clinical laboratory report PDF.
  */
 export async function generateDynamicReportPDF({
   report,
@@ -144,149 +152,178 @@ export async function generateDynamicReportPDF({
   // Initial page decorations
   drawPageDecorations(doc, extDoc, logoBase64);
 
-  let yPos = 12;
+  let yPos = 9;
 
-  // 1. Header Banner Image & Title
+  // 1. Header Banner Section
   if (headerBase64) {
     try {
-      // header.png aspect ratio is 965:258 (~3.74:1)
-      const bannerH = 26;
-      const bannerW = bannerH * (965 / 258); // ~97mm
-      const bannerX = (pageWidth - bannerW) / 2;
-      doc.addImage(headerBase64, "PNG", bannerX, yPos, bannerW, bannerH);
-      yPos += bannerH + 3;
+      // header.png aspect ratio 965:258 (~3.74:1). Scaled to span page margins (186mm width, 26mm height)
+      doc.addImage(headerBase64, "PNG", 12, yPos, 186, 26);
+      yPos += 28;
     } catch {
       yPos += 2;
     }
+  } else {
+    // Typographic fallback if header image is unavailable
+    if (logoBase64) {
+      doc.addImage(logoBase64, "PNG", 14, yPos + 1, 18, 18);
+    }
+    doc.setTextColor(15, 39, 74);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("SHAH MUHAMMAD MEDICAL COMPLEX (SMMC)", 36, yPos + 7);
+
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(71, 85, 105);
+    doc.text("Department of Pathology & Clinical Laboratory Services", 36, yPos + 12);
+    doc.setTextColor(37, 99, 235);
+    doc.text("ISO 15189:2022 Certified • Quality Assured Diagnostic Center", 36, yPos + 16.5);
+
+    yPos += 22;
   }
 
-  // Clinic Report Title & Accreditation (matches canvas designer)
-  doc.setTextColor(30, 58, 138); // Blue-900 / Navy
-  doc.setFontSize(15);
-  doc.setFont("helvetica", "bold");
-  doc.text("SMMC LABORATORY REPORT", pageWidth / 2, yPos, { align: "center" });
-  yPos += 4.5;
+  // Subheader Ribbon Bar: Document Identification & Accreditation
+  doc.setFillColor(248, 250, 252); // Slate-50
+  doc.setDrawColor(226, 232, 240); // Slate-200
+  doc.setLineWidth(0.2);
+  doc.roundedRect(12, yPos, 186, 7.5, 1, 1, "FD");
 
-  doc.setFontSize(8);
-  doc.setFont("helvetica", "normal");
-  doc.setTextColor(37, 99, 235); // Blue-600
-  doc.text("ISO 15189 Certified Diagnostic Center", pageWidth / 2, yPos, { align: "center" });
-  yPos += 4.5;
-
-  // Report ID Pill Badge
-  doc.setFillColor(239, 246, 255); // Blue-50
-  doc.setDrawColor(191, 219, 254); // Blue-200
-  doc.setLineWidth(0.3);
-  doc.roundedRect(pageWidth / 2 - 40, yPos, 80, 6, 2, 2, "FD");
-
-  doc.setTextColor(29, 78, 216); // Blue-700
+  // Left Title
+  doc.setTextColor(15, 39, 74); // Deep Navy
   doc.setFontSize(8.5);
   doc.setFont("helvetica", "bold");
-  doc.text(`REPORT ID: ${report.reportId}`, pageWidth / 2, yPos + 4.2, { align: "center" });
-  yPos += 10;
+  doc.text("CLINICAL PATHOLOGY LABORATORY REPORT", 16, yPos + 5);
 
-  // 2. Patient Information Section
+  // Center Subtitle
+  doc.setTextColor(100, 116, 139);
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.text("ISO 15189 Certified Diagnostic Center", pageWidth / 2 + 5, yPos + 5, { align: "center" });
+
+  // Right Report ID Pill Badge
+  doc.setFillColor(239, 246, 255); // Ice Blue #eff6ff
+  doc.setDrawColor(191, 219, 254); // Blue-200
+  doc.roundedRect(pageWidth - 72, yPos + 1.2, 58, 5.1, 1, 1, "FD");
+
+  doc.setTextColor(29, 78, 216); // Royal Blue
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "bold");
+  doc.text(`REPORT NO: ${report.reportId}`, pageWidth - 43, yPos + 4.7, { align: "center" });
+
+  yPos += 11;
+
+  // 2. Patient Information Panel (Sleek Executive Card with Signature Blue Bar)
   const onlyPatientName = showOnlyPatientName || 
     template?.blocks.find((b) => b.type === "patient-info")?.config.showOnlyPatientName || 
     false;
 
-  doc.setDrawColor(191, 219, 254); // Blue-200
-  doc.setLineWidth(0.35);
-
   if (onlyPatientName) {
-    // Mode: Only Patient Name (User Requirement)
+    // Mode: Strictly ONLY Patient Name (Executive Privacy Mode)
+    const cardH = 13;
     doc.setFillColor(248, 250, 252);
-    doc.roundedRect(12, yPos, pageWidth - 24, 12, 1.5, 1.5, "FD");
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(12, yPos, 186, cardH, 1.5, 1.5, "FD");
+
+    // Executive Left Blue Signature Bar
+    doc.setFillColor(37, 99, 235);
+    doc.rect(12, yPos, 2.5, cardH, "F");
 
     doc.setTextColor(71, 85, 105);
-    doc.setFontSize(9.5);
+    doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
-    doc.text("Patient Name:", 16, yPos + 7.5);
+    doc.text("PATIENT NAME:", 18, yPos + 8.2);
 
-    doc.setTextColor(29, 78, 216); // Royal Blue
-    doc.setFontSize(12);
+    doc.setTextColor(15, 39, 74);
+    doc.setFontSize(11.5);
     doc.setFont("helvetica", "bold");
-    doc.text(report.patient.name, 45, yPos + 7.5);
-    yPos += 16;
+    doc.text(report.patient.name.toUpperCase(), 48, yPos + 8.2);
+
+    // Right Confidential Badge
+    doc.setFillColor(239, 246, 255);
+    doc.setDrawColor(191, 219, 254);
+    doc.roundedRect(pageWidth - 68, yPos + 3.5, 54, 6, 1, 1, "FD");
+    doc.setTextColor(29, 78, 216);
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.text("CONFIDENTIAL PATIENT REPORT", pageWidth - 41, yPos + 7.5, { align: "center" });
+
+    yPos += cardH + 5;
   } else {
-    // Mode: Full Clinical Patient Information Card
+    // Mode: Full Clinical Patient Information Card (High-End 3-Column Grid)
+    const cardH = 22;
     doc.setFillColor(248, 250, 252);
-    doc.roundedRect(12, yPos, pageWidth - 24, 22, 1.5, 1.5, "FD");
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(12, yPos, 186, cardH, 1.5, 1.5, "FD");
 
-    const leftX = 16;
-    const midX = pageWidth / 2 + 4;
-    let lineY = yPos + 5.5;
+    // Executive Left Blue Signature Bar
+    doc.setFillColor(37, 99, 235);
+    doc.rect(12, yPos, 2.5, cardH, "F");
 
-    // Line 1: Patient Name & Doctor
+    // Subtle Internal Column Dividers
+    doc.setDrawColor(241, 245, 249);
+    doc.setLineWidth(0.2);
+    doc.line(82, yPos + 3, 82, yPos + cardH - 3);
+    doc.line(138, yPos + 3, 138, yPos + cardH - 3);
+
+    const c1X = 18;
+    const c2X = 86;
+    const c3X = 142;
+
+    // Row 1 (yPos + 5.5)
+    let rowY = yPos + 5.5;
+    doc.setFontSize(7);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(100, 116, 139);
+    doc.text("PATIENT NAME", c1X, rowY);
+    doc.text("REFERRING DR", c2X, rowY);
+    doc.text("COLLECTION TIME", c3X, rowY);
+
+    rowY += 4.2;
     doc.setFontSize(8.5);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(71, 85, 105);
-    doc.text("Patient:", leftX, lineY);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(15, 23, 42);
-    doc.text(`${report.patient.name} ${report.patient.relation ? `(${report.patient.relation})` : ""}`, leftX + 22, lineY);
+    doc.setTextColor(15, 39, 74); // Deep Navy
+    doc.text(`${report.patient.name} ${report.patient.relation ? `(${report.patient.relation})` : ""}`, c1X, rowY);
 
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(71, 85, 105);
-    doc.text("Referring Doctor:", midX, lineY);
+    doc.setFontSize(8);
+    doc.text(report.patient.referringDoctor || "Self / Consultant", c2X, rowY);
+    doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(15, 23, 42);
-    doc.text(report.patient.referringDoctor || "Self", midX + 30, lineY);
+    doc.text(formatDateTime(report.patient.collectionDateTime), c3X, rowY);
 
-    // Line 2: Age / Sex & Collection Date
-    lineY += 5.5;
+    // Row 2 (yPos + 14.5)
+    rowY = yPos + 15;
+    doc.setFontSize(7);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(71, 85, 105);
-    doc.text("Age / Sex:", leftX, lineY);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(15, 23, 42);
-    doc.text(`${report.patient.age ?? "-"} / ${report.patient.sex ?? "-"}`, leftX + 22, lineY);
+    doc.setTextColor(100, 116, 139);
+    doc.text("AGE / GENDER", c1X, rowY);
+    doc.text("SAMPLE ID", c2X, rowY);
+    doc.text("REPORTING TIME", c3X, rowY);
 
+    rowY += 4.2;
+    doc.setFontSize(8);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(71, 85, 105);
-    doc.text("Collection Date:", midX, lineY);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(15, 23, 42);
-    doc.text(formatDateTime(report.patient.collectionDateTime), midX + 30, lineY);
+    doc.setTextColor(15, 39, 74);
+    doc.text(`${report.patient.age ?? "-"} Y  /  ${report.patient.sex ?? "-"}`, c1X, rowY);
 
-    // Line 3: Sample ID & Report Date
-    lineY += 5.5;
+    doc.setTextColor(37, 99, 235); // Blue-600
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(71, 85, 105);
-    doc.text("Sample ID:", leftX, lineY);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(29, 78, 216); // Royal Blue
-    doc.text(report.patient.sampleId, leftX + 22, lineY);
+    doc.text(report.patient.sampleId, c2X, rowY);
 
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(71, 85, 105);
-    doc.text("Report Date:", midX, lineY);
+    doc.setFontSize(7.5);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(15, 23, 42);
-    doc.text(formatDateTime(report.verificationDate), midX + 30, lineY);
+    doc.setTextColor(15, 39, 74);
+    doc.text(formatDateTime(report.verificationDate), c3X, rowY);
 
-    yPos += 26;
+    yPos += cardH + 5;
   }
 
-  // 3. Test Findings Tables (Matches Canvas Designer & Real Laboratory Style)
+  // 3. Test Findings Tables (Executive Pathology Layout)
   for (const test of tests) {
     const testResults = report.results[test.id] || {};
     const tableRows: RowInput[] = [];
-
-    // Test Title Bar (matches canvas designer: blue-700 with method on the right)
-    tableRows.push([
-      {
-        content: `${test.name.toUpperCase()}${test.method ? `   •   Method: ${test.method}` : ""}`,
-        colSpan: 4,
-        styles: {
-          fontStyle: "bold",
-          fontSize: 9,
-          halign: "left",
-          fillColor: [29, 78, 216], // Royal Blue #1d4ed8
-          textColor: [255, 255, 255],
-        },
-      },
-    ]);
 
     const sections = test.sections && test.sections.length > 0 
       ? test.sections 
@@ -299,17 +336,18 @@ export async function generateDynamicReportPDF({
 
       if (secFields.length === 0) continue;
 
-      // Section row divider (e.g., Physical Examination, Chemical Examination, Microscopic Examination)
+      // Section divider row (e.g. Physical Examination, Chemical Examination, Microscopic Examination)
       if (sec.name) {
         tableRows.push([
           {
-            content: `• ${sec.name.toUpperCase()}`,
+            content: `▶  ${sec.name.toUpperCase()}`,
             colSpan: 4,
             styles: {
               fontStyle: "bold",
-              fontSize: 8.5,
-              fillColor: [239, 246, 255], // Soft Ice Blue #eff6ff
-              textColor: [30, 64, 175],   // Deep Blue #1e40af
+              fontSize: 7.5,
+              fillColor: [240, 247, 255], // Glacier Blue #f0f7ff
+              textColor: [29, 78, 216],   // Royal Blue #1d4ed8
+              cellPadding: 1.8,
             },
           },
         ]);
@@ -330,35 +368,63 @@ export async function generateDynamicReportPDF({
       }
     }
 
+    // Check if new page is needed before table title banner
+    if (yPos > pageHeight - 45) {
+      doc.addPage();
+      drawPageDecorations(doc, extDoc, logoBase64);
+      yPos = 14;
+    }
+
+    // Elegant Test Header Banner
+    doc.setFillColor(15, 39, 74); // Deep Navy #0f274a
+    doc.roundedRect(12, yPos, 186, 6.5, 1, 1, "F");
+
+    // Title left
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8.5);
+    doc.setFont("helvetica", "bold");
+    doc.text(`●  ${test.name.toUpperCase()}`, 16, yPos + 4.5);
+
+    // Method right
+    if (test.method) {
+      doc.setTextColor(147, 197, 253); // Light Blue-300
+      doc.setFontSize(7.5);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Method: ${test.method}`, pageWidth - 16, yPos + 4.5, { align: "right" });
+    }
+
+    yPos += 6.5;
+
     autoTable(doc, {
       startY: yPos,
       margin: { left: 12, right: 12 },
-      head: [["Test Parameter", "Observed Result", "Unit", "Biological Reference Range"]],
+      head: [["INVESTIGATION / PARAMETER", "OBSERVED RESULT", "UNIT", "BIOLOGICAL REFERENCE RANGE"]],
       body: tableRows,
       theme: "grid",
       styles: {
-        fontSize: 8.5,
-        cellPadding: 2.2,
+        fontSize: 8,
+        cellPadding: 2,
         textColor: [15, 23, 42],
-        lineColor: [226, 232, 240], // Clean Slate-200
-        lineWidth: 0.15,
-        fillColor: false,           // TRANSPARENT so watermark is 100% visible beneath!
+        lineColor: [226, 232, 240], // Slate-200
+        lineWidth: 0.1,
+        fillColor: false,           // TRANSPARENT so watermark is visible beneath!
       },
       headStyles: {
-        fillColor: [30, 58, 138],   // Deep Royal Navy Blue #1e3a8a
+        fillColor: [30, 58, 138],   // Deep Sapphire #1e3a8a
         textColor: [255, 255, 255],
-        fontSize: 9,
+        fontSize: 8,
         fontStyle: "bold",
         halign: "center",
+        cellPadding: 2.2,
       },
       columnStyles: {
-        0: { fontStyle: "bold", halign: "left", cellWidth: 65 },
-        1: { halign: "center", cellWidth: 45 },
-        2: { halign: "center", cellWidth: 30 },
-        3: { halign: "center", cellWidth: 46 },
+        0: { fontStyle: "bold", halign: "left", cellWidth: 64 },
+        1: { halign: "center", fontStyle: "bold", cellWidth: 42 },
+        2: { halign: "center", cellWidth: 28 },
+        3: { halign: "center", cellWidth: 52 },
       },
       alternateRowStyles: {
-        fillColor: false,           // Transparent alternate rows to keep watermark crystal clear
+        fillColor: false,           // Transparent alternate rows to keep watermark pristine
       },
       didParseCell: (data) => {
         // Highlight abnormal / positive findings in bold RED, and normal in bold BLUE
@@ -373,72 +439,130 @@ export async function generateDynamicReportPDF({
             cellText.includes("4+") ||
             cellText === "Present"
           ) {
-            data.cell.styles.textColor = [220, 38, 38]; // Red
+            data.cell.styles.textColor = [220, 38, 38]; // Crimson Red #dc2626
             data.cell.styles.fontStyle = "bold";
           } else if (cellText === "Negative" || cellText === "Non-Reactive" || cellText === "Normal" || cellText === "Nil") {
-            data.cell.styles.textColor = [29, 78, 216]; // Royal Blue
+            data.cell.styles.textColor = [29, 78, 216]; // Royal Blue #1d4ed8
             data.cell.styles.fontStyle = "bold";
           }
         }
       },
       didDrawPage: (data) => {
-        // Redraw outer borders and watermark if content spans onto multiple pages
         if (data.pageNumber > 1) {
           drawPageDecorations(doc, extDoc, logoBase64);
         }
       },
     });
 
-    yPos = (extDoc.lastAutoTable ? extDoc.lastAutoTable.finalY : yPos + 40) + 6;
+    yPos = (extDoc.lastAutoTable ? extDoc.lastAutoTable.finalY : yPos + 40) + 5;
   }
 
-  // 4. Clinical Notes / Interpretation Box
-  const notesText = report.notes || template?.blocks.find((b) => b.type === "doctor-notes")?.config.customText;
-  if (notesText) {
-    if (yPos > pageHeight - 45) {
+  // 4. Clinical Notes / Pathologist Interpretation Box
+  // USER REQUIREMENT: Strictly removed from default! Only render if notes are explicitly provided!
+  const notesText = report.notes ? report.notes.trim() : "";
+  if (notesText && notesText.length > 0) {
+    if (yPos > pageHeight - 50) {
       doc.addPage();
       drawPageDecorations(doc, extDoc, logoBase64);
-      yPos = 20;
+      yPos = 14;
     }
 
+    const boxH = 15;
     doc.setFillColor(248, 250, 252);
-    doc.setDrawColor(191, 219, 254);
-    doc.setLineWidth(0.3);
-    doc.roundedRect(12, yPos, pageWidth - 24, 14, 1.5, 1.5, "FD");
+    doc.setDrawColor(203, 213, 225);
+    doc.setLineWidth(0.25);
+    doc.roundedRect(12, yPos, 186, boxH, 1.5, 1.5, "FD");
 
-    doc.setFontSize(8.5);
+    // Executive Left Blue Signature Bar
+    doc.setFillColor(37, 99, 235);
+    doc.rect(12, yPos, 2.2, boxH, "F");
+
+    doc.setFontSize(7.5);
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(30, 58, 138);
-    doc.text("Clinical Notes / Interpretation:", 16, yPos + 4.5);
+    doc.setTextColor(15, 39, 74);
+    doc.text("CLINICAL INTERPRETATION / PATHOLOGIST NOTES:", 17, yPos + 4.8);
 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(8);
+    doc.setFontSize(7.5);
     doc.setTextColor(30, 41, 59);
-    doc.text(notesText, 16, yPos + 9.5, { maxWidth: pageWidth - 32 });
-    yPos += 18;
+    doc.text(notesText, 17, yPos + 9.5, { maxWidth: 176 });
+    yPos += boxH + 5;
   }
 
-  // 5. Digital Verification & Sign-off Footer
-  const footerY = Math.max(yPos + 4, pageHeight - 25);
-  doc.setDrawColor(203, 213, 225); // Slate-300
+  // 5. Digital Signatures Block & Verification Footer
+  const sigY = Math.max(yPos + 4, pageHeight - 34);
+
+  // Left: Laboratory Technologist
+  doc.setDrawColor(203, 213, 225);
   doc.setLineWidth(0.2);
-  doc.line(12, footerY, pageWidth - 12, footerY);
+  doc.line(16, sigY, 70, sigY);
+
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(15, 39, 74);
+  doc.text("LABORATORY TECHNOLOGIST", 16, sigY + 4.2);
+
+  doc.setFontSize(7);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(71, 85, 105);
+  doc.text(report.technicianName || "Staff Technologist", 16, sigY + 8);
+  doc.setFontSize(6.5);
+  doc.setTextColor(100, 116, 139);
+  doc.text("B.Sc. MLT • Quality Control Verified", 16, sigY + 11.5);
+
+  // Center: Official Digital Verification Shield Badge
+  doc.setFillColor(239, 246, 255);
+  doc.setDrawColor(191, 219, 254);
+  doc.roundedRect(pageWidth / 2 - 26, sigY - 2, 52, 9.5, 1.5, 1.5, "FD");
+
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(29, 78, 216);
+  doc.text("[ ✓ DIGITALLY VERIFIED ]", pageWidth / 2, sigY + 2.5, { align: "center" });
+
+  doc.setFontSize(6.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(71, 85, 105);
+  doc.text("ISO 15189 Quality Protocol", pageWidth / 2, sigY + 6.2, { align: "center" });
+
+  // Right: Consultant Pathologist
+  doc.setDrawColor(203, 213, 225);
+  doc.setLineWidth(0.2);
+  doc.line(pageWidth - 70, sigY, pageWidth - 16, sigY);
 
   doc.setFontSize(8);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(30, 58, 138); // Royal Navy
-  doc.text(`Laboratory Technician: ${report.technicianName || "Staff"}`, 14, footerY + 5);
-  doc.text(`Verified By: ${report.verifiedBy || "Dr. Aamir (Consultant Pathologist)"}`, pageWidth - 14, footerY + 5, { align: "right" });
+  doc.setTextColor(15, 39, 74);
+  doc.text("DR. AAMIR", pageWidth - 16, sigY + 4.2, { align: "right" });
 
   doc.setFontSize(7);
-  doc.setFont("helvetica", "italic");
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(71, 85, 105);
+  doc.text("M.B.B.S., F.C.P.S. (Pathology)", pageWidth - 16, sigY + 8, { align: "right" });
+
+  doc.setFontSize(6.5);
   doc.setTextColor(100, 116, 139);
-  doc.text(
-    "This report is digitally signed and electronically verified under ISO 15189 protocols. No physical signature is required.",
-    pageWidth / 2,
-    footerY + 10,
-    { align: "center" }
-  );
+  doc.text("Consultant Pathologist & Lab Director", pageWidth - 16, sigY + 11.5, { align: "right" });
+
+  // 6. Pagination & Audit Footer Across All Pages
+  const totalPages = doc.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+
+    doc.setDrawColor(226, 232, 240);
+    doc.setLineWidth(0.15);
+    doc.line(12, pageHeight - 9, pageWidth - 12, pageHeight - 9);
+
+    doc.setFontSize(6.5);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100, 116, 139);
+    doc.text("SMMC Clinical Diagnostic Laboratory • Emergency & Routine Pathology Services", 12, pageHeight - 5.5);
+    doc.text("Computer-generated report. No physical signature required.", pageWidth / 2, pageHeight - 5.5, { align: "center" });
+
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(15, 39, 74);
+    doc.text(`Page ${p} of ${totalPages}`, pageWidth - 12, pageHeight - 5.5, { align: "right" });
+  }
 
   return doc;
 }

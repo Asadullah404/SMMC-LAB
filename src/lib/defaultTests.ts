@@ -287,13 +287,13 @@ export const createDefaultCanvasTemplate = (testId: string, testName: string): C
         x: 12,
         y: 220,
         width: 186,
-        visible: true,
+        visible: false,
         config: {
           title: "Pathologist / Clinical Notes",
-          customText: "All tests performed under strict internal quality control measures.",
+          customText: "",
           showBorders: true,
-          backgroundColor: "#f0fdf4",
-          borderColor: "#86efac",
+          backgroundColor: "#f8fafc",
+          borderColor: "#bfdbfe",
         },
       },
       {
